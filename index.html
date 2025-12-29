@@ -3,85 +3,83 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة الإعدادية الشرقية - محمد عدي مؤيد حمادي</title>
+    <title>منصة الإعدادية الشرقية - محمد عدي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
-        body { font-family: 'Tajawal', sans-serif; background: #f8fafc; color: #1e293b; }
+        body { font-family: 'Tajawal', sans-serif; background: #f8fafc; margin: 0; padding: 0; }
         .hidden { display: none !important; }
-        .admin-card { border-right: 6px solid; background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); margin-bottom: 15px; }
-        .chat-bubble { max-width: 80%; padding: 10px; border-radius: 18px; font-size: 12px; margin-bottom: 8px; position: relative; }
-        .delete-btn { font-size: 10px; color: #ef4444; cursor: pointer; background: white; border-radius: 50%; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; margin-top: 5px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        .rules-card { background: linear-gradient(135deg, #1e293b, #2d3748); color: white; padding: 20px; border-radius: 25px; margin-bottom: 20px; border-right: 8px solid #facc15; }
+        .admin-card { border-right: 6px solid #1e293b; background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        .chat-bubble { max-width: 85%; padding: 12px; border-radius: 18px; font-size: 13px; margin-bottom: 8px; line-height: 1.5; }
+        .delete-btn { color: #ef4444; cursor: pointer; font-weight: bold; font-size: 11px; margin-top: 5px; display: block; }
     </style>
 </head>
 <body class="min-h-screen flex flex-col">
 
-    <div id="login-screen" class="max-w-md mx-auto my-6 p-6 bg-white rounded-[2.5rem] shadow-2xl border-b-8 border-[#1e293b]">
+    <div id="login-screen" class="max-w-md mx-auto my-10 p-8 bg-white rounded-[2.5rem] shadow-2xl border-b-8 border-[#1e293b]">
         <div class="text-center mb-6">
             <h1 class="text-2xl font-bold text-[#1e293b]">منصة الإعدادية الشرقية</h1>
-            <p class="text-[10px] font-bold text-blue-600 bg-blue-50 py-1 rounded-full mt-2">بإشراف المطور: محمد عدي مؤيد حمادي</p>
+            <p class="text-[10px] font-bold text-blue-600 bg-blue-50 py-1 rounded-full mt-2 italic">بإشراف المطور: محمد عدي مؤيد حمادي</p>
         </div>
         
-        <div class="space-y-3">
+        <div class="space-y-4">
             <div class="text-center">
-                <img id="previewImg" src="https://via.placeholder.com/100" class="w-24 h-24 rounded-full mx-auto mb-2 border-4 border-gray-100 object-cover shadow-sm">
-                <label class="bg-gray-800 text-white px-4 py-1 rounded-full text-[10px] font-bold cursor-pointer">📸 صورة الحساب
-                    <input type="file" id="userPhoto" accept="image/*" class="hidden" onchange="loadFile(event, 'previewImg')">
+                <img id="previewImg" src="https://via.placeholder.com/100" class="w-24 h-24 rounded-full mx-auto mb-2 border-4 border-gray-100 object-cover">
+                <label class="bg-gray-800 text-white px-4 py-1 rounded-full text-[10px] cursor-pointer block w-max mx-auto">📸 صورة الحساب
+                    <input type="file" id="userPhoto" accept="image/*" class="hidden" onchange="handleImage(this)">
                 </label>
             </div>
 
             <input type="text" id="regName" class="w-full p-3 border rounded-xl outline-none text-sm" placeholder="الاسم الكامل">
             <input type="tel" id="regPhone" class="w-full p-3 border rounded-xl outline-none text-sm" placeholder="رقم الهاتف">
             
-            <select id="regRole" class="w-full p-3 border rounded-xl bg-gray-50 text-sm font-bold" onchange="handleRoleChange()">
+            <select id="regRole" class="w-full p-3 border rounded-xl bg-gray-50 text-sm font-bold" onchange="toggleCodeField()">
                 <option value="طالب">طالب</option>
                 <option value="ولي أمر">ولي أمر طالب</option>
                 <option value="مدير">المدير</option>
                 <option value="معاون إداري">المعاون الإداري</option>
-                <option value="معاون شؤون">معاون شؤون الطلبة</option>
                 <option value="مشرف">مشرف الموقع (محمد عدي)</option>
                 <option value="مدرس">مدرس مادة</option>
             </select>
 
             <input type="password" id="regCode" class="hidden w-full p-3 border border-red-300 rounded-xl outline-none text-sm" placeholder="الرمز السري">
 
-            <div id="student-options" class="grid grid-cols-2 gap-2">
-                <select id="regGrade" class="p-3 border rounded-xl bg-gray-50 text-sm font-bold"><option value="السادس">السادس العلمي</option><option value="الخامس">الخامس العلمي</option><option value="الرابع">الرابع العلمي</option></select>
-                <select id="regSection" class="p-3 border rounded-xl bg-gray-50 text-sm font-bold"><option value="أ">أ</option><option value="ب">ب</option><option value="ج">ج</option><option value="د">د</option><option value="هـ">هـ</option><option value="و">و</option><option value="ز">ز</option><option value="ح">ح</option><option value="ط">ط</option><option value="ي">ي</option></select>
-            </div>
-
-            <button onclick="login()" class="w-full bg-[#1e293b] text-white py-4 rounded-2xl font-bold shadow-xl">دخول للمنصة</button>
+            <button onclick="login()" class="w-full bg-[#1e293b] text-white py-4 rounded-2xl font-bold shadow-xl hover:bg-black transition">دخول للمنصة</button>
         </div>
     </div>
 
     <div id="app" class="hidden flex flex-col h-screen overflow-hidden">
         <header class="bg-[#1e293b] text-white p-4 shadow-lg flex justify-between items-center">
             <div class="flex items-center gap-3">
-                <img id="navPhoto" class="w-10 h-10 rounded-full border-2 border-yellow-500 object-cover">
-                <div><h2 id="navName" class="font-bold text-xs"></h2><p id="navRole" class="text-[9px] text-yellow-400 font-bold"></p></div>
+                <img id="navPhoto" src="" class="w-10 h-10 rounded-full border-2 border-yellow-500 object-cover">
+                <div>
+                    <h2 id="navName" class="font-bold text-xs"></h2>
+                    <p id="navRole" class="text-[9px] text-yellow-400 font-bold"></p>
+                </div>
             </div>
-            <button onclick="logout()" class="text-[10px] bg-red-600 px-3 py-1 rounded-full font-bold">تسجيل خروج</button>
+            <button onclick="logout()" class="text-[9px] bg-red-600 px-3 py-1 rounded-full font-bold">خروج</button>
         </header>
 
-        <main id="content" class="flex-grow overflow-y-auto p-4 pb-40 bg-gray-50">
-            <div id="admin-panel" class="hidden bg-white p-4 rounded-3xl border-2 border-dashed border-gray-300 mb-6 shadow-sm">
-                <textarea id="postTxt" class="w-full p-3 rounded-xl border text-sm outline-none" placeholder="نشر تبليغ إداري..."></textarea>
-                <button onclick="publish()" class="w-full bg-[#1e293b] text-white mt-2 py-2 rounded-xl font-bold text-xs">نشر الآن</button>
+        <main class="flex-grow overflow-y-auto p-4 pb-32 bg-gray-50">
+            <div id="admin-panel" class="hidden bg-white p-4 rounded-3xl border-2 border-dashed border-gray-300 mb-6">
+                <textarea id="postTxt" class="w-full p-3 rounded-xl border text-sm outline-none" placeholder="اكتب تبليغاً جديداً..."></textarea>
+                <button onclick="publish()" class="w-full bg-[#1e293b] text-white mt-2 py-2 rounded-xl font-bold text-xs">نشر التبليغ</button>
             </div>
 
             <div id="news-tab" class="space-y-4"></div>
-            <div id="subjects-tab" class="hidden space-y-4"><div id="subject-container"></div></div>
-            <div id="chat-tab" class="hidden flex flex-col h-full">
-                <div id="chatMessages" class="flex-grow overflow-y-auto p-2 space-y-3"></div>
-                <div class="p-3 bg-white border-t flex gap-2">
-                    <input type="text" id="chatInput" class="flex-grow p-3 bg-gray-100 rounded-full text-xs outline-none" placeholder="رسالة للمجموعة...">
-                    <button onclick="sendChat()" class="bg-[#1e293b] text-white px-4 rounded-full">🚀</button>
+            <div id="subjects-tab" class="hidden space-y-4">
+                <div class="admin-card border-blue-500">📚 قسم المواد الدراسية (قريباً)</div>
+            </div>
+            <div id="chat-tab" class="hidden flex flex-col space-y-4">
+                <div id="chatMessages" class="space-y-3 min-h-[300px]"></div>
+                <div class="flex gap-2 p-2 bg-white rounded-2xl border">
+                    <input type="text" id="chatInput" class="flex-grow text-xs outline-none p-2" placeholder="اكتب رسالة للشعبة...">
+                    <button onclick="sendChat()" class="bg-[#1e293b] text-white px-4 py-2 rounded-xl text-xs">إرسال</button>
                 </div>
             </div>
         </main>
 
-        <nav id="main-nav" class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-3 shadow-2xl z-50">
+        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-3 shadow-2xl z-50">
             <button onclick="showTab('news')" class="flex flex-col items-center text-blue-600"><span class="text-xl">📢</span><span class="text-[9px] font-bold">الإدارة</span></button>
             <button id="nav-subjects" onclick="showTab('subjects')" class="flex flex-col items-center text-gray-400"><span class="text-xl">📝</span><span class="text-[9px] font-bold">المواد</span></button>
             <button id="nav-chat" onclick="showTab('chat')" class="flex flex-col items-center text-gray-400"><span class="text-xl">💬</span><span class="text-[9px] font-bold">الدردشة</span></button>
@@ -89,38 +87,45 @@
     </div>
 
     <script>
-        let currentUser = null;
         const ACCESS_CODES = { "مدير": "99201", "معاون إداري": "77340", "مشرف": "88229", "مدرس": "44109" };
+        let userPhotoData = "";
 
-        window.onload = () => {
+        // عند تحميل الصفحة
+        window.onload = function() {
             const savedUser = localStorage.getItem('asharqia_user');
-            if(savedUser) { currentUser = JSON.parse(savedUser); renderApp(); }
+            if (savedUser) {
+                renderApp(JSON.parse(savedUser));
+            }
         };
 
-        function loadFile(e, id) {
-            const file = e.target.files[0]; if (!file) return;
+        function handleImage(input) {
             const reader = new FileReader();
-            reader.onload = (ev) => { document.getElementById(id).src = ev.target.result; };
-            reader.readAsDataURL(file);
+            reader.onload = (e) => {
+                document.getElementById('previewImg').src = e.target.result;
+                userPhotoData = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
         }
 
-        function handleRoleChange() {
-            const r = document.getElementById('regRole').value;
-            document.getElementById('regCode').classList.toggle('hidden', (r === 'طالب' || r === 'ولي أمر'));
+        function toggleCodeField() {
+            const role = document.getElementById('regRole').value;
+            const needsCode = (role !== 'طالب' && role !== 'ولي أمر');
+            document.getElementById('regCode').classList.toggle('hidden', !needsCode);
         }
 
         function login() {
             const name = document.getElementById('regName').value;
             const role = document.getElementById('regRole').value;
-            const photo = document.getElementById('previewImg').src;
             const code = document.getElementById('regCode').value;
 
-            if(!name || photo.includes('placeholder')) return alert("يرجى إكمال البيانات");
-            if(role !== 'طالب' && role !== 'ولي أمر' && code !== ACCESS_CODES[role]) return alert("الرمز السري خاطئ");
+            if (!name || !userPhotoData) return alert("يرجى إدخال الاسم وصورة الحساب");
+            if (document.getElementById('regCode').offsetParent !== null && code !== ACCESS_CODES[role]) {
+                return alert("الرمز السري غير صحيح");
+            }
 
-            currentUser = { name, role, photo, isSuper: (role === 'مشرف') };
-            localStorage.setItem('asharqia_user', JSON.stringify(currentUser));
-            renderApp();
+            const userData = { name, role, photo: userPhotoData, isSuper: (role === 'مشرف') };
+            localStorage.setItem('asharqia_user', JSON.stringify(userData));
+            renderApp(userData);
         }
 
         function logout() {
@@ -128,57 +133,56 @@
             location.reload();
         }
 
-        function renderApp() {
+        function renderApp(user) {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
-            document.getElementById('navPhoto').src = currentUser.photo;
-            document.getElementById('navName').innerText = currentUser.name;
-            document.getElementById('navRole').innerText = currentUser.role;
+            document.getElementById('navPhoto').src = user.photo;
+            document.getElementById('navName').innerText = user.name;
+            document.getElementById('navRole').innerText = user.role;
 
-            if(currentUser.role === 'طالب' || currentUser.role === 'مدرس' || currentUser.isSuper) {
-                document.getElementById('nav-subjects').classList.remove('hidden');
-                document.getElementById('nav-chat').classList.remove('hidden');
-            }
-            if(currentUser.role !== 'طالب' && currentUser.role !== 'ولي أمر') {
+            if (user.role !== 'طالب' && user.role !== 'ولي أمر') {
                 document.getElementById('admin-panel').classList.remove('hidden');
             }
-            setupSubjects();
+            if (user.role === 'ولي أمر') {
+                document.getElementById('nav-subjects').classList.add('hidden');
+                document.getElementById('nav-chat').classList.add('hidden');
+            }
         }
 
-        function showTab(t) {
-            ['news-tab', 'subjects-tab', 'chat-tab'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            document.getElementById(t + '-tab').classList.remove('hidden');
-        }
-
-        function sendChat() {
-            const msg = document.getElementById('chatInput').value; if(!msg) return;
-            const m = document.createElement('div'); 
-            m.className = "flex gap-2 mb-2 chat-msg-row items-start";
-            let delBtn = currentUser.isSuper ? `<button onclick="this.closest('.chat-msg-row').remove()" class="text-red-500 text-[10px]">حذف</button>` : "";
-            
-            m.innerHTML = `<img src="${currentUser.photo}" class="w-8 h-8 rounded-full border">
-                <div class="bg-gray-100 p-2 rounded-xl">
-                    <div class="text-[8px] font-bold text-blue-600">${currentUser.name}</div>
-                    <div class="text-xs">${msg}</div>
-                    ${delBtn}
-                </div>`;
-            document.getElementById('chatMessages').appendChild(m);
-            document.getElementById('chatInput').value = "";
-            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
-        }
-
-        function setupSubjects() {
-            const subs = ["الكيمياء", "الفيزياء", "العربي", "الرياضيات", "الأحياء"];
-            document.getElementById('subject-container').innerHTML = subs.map(s => `<div class="admin-card border-blue-500 text-xs font-bold">📚 مادة ${s}</div>`).join('');
+        function showTab(tabName) {
+            ['news-tab', 'subjects-tab', 'chat-tab'].forEach(t => document.getElementById(t).classList.add('hidden'));
+            document.getElementById(tabName + '-tab').classList.remove('hidden');
         }
 
         function publish() {
-            const txt = document.getElementById('postTxt').value; if(!txt) return;
-            const n = document.createElement('div'); n.className = "bg-white p-4 rounded-2xl shadow-sm border-r-4 border-red-600 mb-4 chat-msg-row";
-            let delBtn = currentUser.isSuper ? `<button onclick="this.closest('.chat-msg-row').remove()" class="text-red-500 text-[10px] block mt-2">🗑️ حذف</button>` : "";
-            n.innerHTML = `<span class="text-[9px] font-bold text-red-600">${currentUser.role}: ${currentUser.name}</span><p class="text-sm mt-1">${txt}</p>${delBtn}`;
-            document.getElementById('news-tab').prepend(n);
+            const txt = document.getElementById('postTxt').value;
+            if (!txt) return;
+            const user = JSON.parse(localStorage.getItem('asharqia_user'));
+            const div = document.createElement('div');
+            div.className = "admin-card border-red-600";
+            div.innerHTML = `<span class="text-[10px] font-bold text-red-600">${user.role}: ${user.name}</span><p class="text-sm mt-1">${txt}</p>`;
+            if (user.isSuper) div.innerHTML += `<span class="delete-btn" onclick="this.parentElement.remove()">🗑️ حذف المنشور</span>`;
+            document.getElementById('news-tab').prepend(div);
             document.getElementById('postTxt').value = "";
+        }
+
+        function sendChat() {
+            const input = document.getElementById('chatInput');
+            if (!input.value) return;
+            const user = JSON.parse(localStorage.getItem('asharqia_user'));
+            const msgDiv = document.createElement('div');
+            msgDiv.className = "flex gap-2 items-start justify-end";
+            msgDiv.innerHTML = `
+                <div class="bg-blue-600 text-white chat-bubble">
+                    <div class="text-[9px] font-bold opacity-75">${user.name}</div>
+                    ${input.value}
+                    ${user.isSuper ? '<span class="delete-btn text-white opacity-50" onclick="this.parentElement.parentElement.remove()">حذف</span>' : ''}
+                </div>
+                <img src="${user.photo}" class="w-8 h-8 rounded-full border">
+            `;
+            document.getElementById('chatMessages').appendChild(msgDiv);
+            input.value = "";
+            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
         }
     </script>
 </body>
