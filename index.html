@@ -3,200 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة الإعدادية الشرقية - المطور محمد عدي مؤيد</title>
+    <title>منصة الإعدادية الشرقية - المطور محمد عدي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
-        body { font-family: 'Tajawal', sans-serif; background: #f4f7f6; overflow-x: hidden; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; color: #1e293b; }
         .hidden { display: none !important; }
-        .glass-header { background: rgba(30, 58, 138, 0.95); backdrop-filter: blur(10px); }
-        .card { background: white; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: 0.3s; }
-        .telegram-post { border-right: 5px solid #1e3a8a; background: white; padding: 15px; border-radius: 12px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .chat-bubble { max-width: 80%; padding: 10px; border-radius: 15px; font-size: 13px; margin-bottom: 8px; position: relative; }
-        .my-msg { background: #1e3a8a; color: white; margin-right: auto; border-bottom-left-radius: 2px; }
-        .other-msg { background: #e5e7eb; color: #1f2937; margin-left: auto; border-bottom-right-radius: 2px; }
+        .glass-card { background: rgba(255, 255, 255, 0.95); border-radius: 2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .telegram-post { background: white; border-radius: 1.25rem; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border-right: 6px solid #1e3a8a; }
+        .chat-bubble { max-width: 85%; padding: 12px; border-radius: 18px; font-size: 14px; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen">
 
-    <div id="login-screen" class="flex-grow flex items-center justify-center p-4">
-        <div class="card max-w-md w-full p-8 border-t-8 border-blue-900">
-            <div class="text-center mb-6">
+    <div id="login-screen" class="max-w-md mx-auto my-10 p-4">
+        <div class="glass-card p-8 border-t-[12px] border-blue-900">
+            <div class="text-center mb-8">
                 <h1 class="text-3xl font-black text-blue-900">الإعدادية الشرقية</h1>
-                <p class="text-[10px] font-bold text-gray-400 mt-1 uppercase tracking-widest">المطور: محمد عدي مؤيد</p>
+                <p class="text-[11px] font-bold text-amber-700 mt-2 tracking-widest uppercase">بإشراف المطور: محمد عدي مؤيد</p>
             </div>
 
             <div class="space-y-4">
-                <div class="text-center">
-                    <img id="p-img" src="https://via.placeholder.com/150" class="w-24 h-24 rounded-full mx-auto border-4 border-blue-100 object-cover shadow-lg">
-                    <input type="file" id="u-file" class="hidden" onchange="previewImg(event)">
-                    <button onclick="document.getElementById('u-file').click()" class="text-[10px] bg-blue-900 text-white px-4 py-1 rounded-full mt-2 font-bold">إضافة صورة الحساب</button>
+                <div class="relative w-28 h-28 mx-auto group">
+                    <img id="previewImg" src="https://via.placeholder.com/150" class="w-full h-full rounded-full border-4 border-blue-100 object-cover shadow-xl">
+                    <label class="absolute bottom-0 right-0 bg-blue-900 text-white p-2 rounded-full cursor-pointer hover:scale-110 transition">
+                        📷 <input type="file" id="userPhoto" class="hidden" onchange="handleImage(event)">
+                    </label>
                 </div>
 
-                <input type="text" id="u-name" class="w-full p-4 bg-gray-50 border rounded-2xl text-sm" placeholder="الاسم الثلاثي الكامل">
-                <input type="tel" id="u-phone" class="w-full p-4 bg-gray-50 border rounded-2xl text-sm" placeholder="رقم الهاتف">
+                <input type="text" id="uName" class="w-full p-4 bg-gray-50 border-2 border-transparent focus:border-blue-900 rounded-2xl outline-none transition" placeholder="الاسم الثلاثي الكامل">
+                <input type="tel" id="uPhone" class="w-full p-4 bg-gray-50 border-2 border-transparent focus:border-blue-900 rounded-2xl outline-none transition" placeholder="رقم الهاتف">
                 
-                <select id="u-role" class="w-full p-4 bg-gray-50 border rounded-2xl font-bold text-sm" onchange="handleRole()">
-                    <option value="طالب">طالب</option>
-                    <option value="مدرس">مدرس مادة</option>
-                    <option value="مدير">مدير المدرسة</option>
-                    <option value="معاون">المعاون الإداري</option>
-                    <option value="ولي امر">ولي أمر طالب</option>
+                <select id="uRole" class="w-full p-4 bg-gray-100 border-none rounded-2xl font-bold text-blue-900" onchange="toggleRoleUI()">
+                    <option value="طالب">🎓 طالب</option>
+                    <option value="مدرس">👨‍🏫 مدرس مادة</option>
+                    <option value="مدير">🏛️ مدير المدرسة</option>
+                    <option value="معاون">📋 المعاون الإداري</option>
+                    <option value="ولي امر">👪 ولي أمر طالب</option>
                 </select>
 
-                <input type="password" id="u-pass" class="hidden w-full p-4 border border-red-200 bg-red-50 rounded-2xl text-sm" placeholder="الرمز السري الخاص">
+                <div id="passWrapper" class="hidden">
+                    <input type="password" id="uPass" class="w-full p-4 bg-red-50 border-2 border-red-200 rounded-2xl outline-none" placeholder="أدخل الرمز السري الخاص برتبتك">
+                </div>
 
-                <div id="stu-group" class="grid grid-cols-2 gap-2">
-                    <select id="u-grade" class="p-4 bg-blue-50 border rounded-2xl text-sm font-bold"><option>الرابع</option><option>الخامس</option><option>السادس</option></select>
-                    <select id="u-sec" class="p-4 bg-blue-50 border rounded-2xl text-sm font-bold">
+                <div id="eduWrapper" class="grid grid-cols-2 gap-3">
+                    <select id="uGrade" class="p-4 bg-blue-50 rounded-2xl font-bold"><option>الرابع</option><option>الخامس</option><option>السادس</option></select>
+                    <select id="uSection" class="p-4 bg-blue-50 rounded-2xl font-bold">
                         <option>أ</option><option>ب</option><option>ج</option><option>د</option><option>هـ</option>
                         <option>و</option><option>ز</option><option>ح</option><option>ط</option><option>ي</option>
                     </select>
                 </div>
 
-                <div id="tea-group" class="hidden space-y-3 border-t pt-4">
-                    <input type="text" id="u-sub" class="w-full p-4 border rounded-2xl text-sm" placeholder="المادة (مثال: الكيمياء)">
-                    <p class="text-[10px] font-bold text-blue-900">حدد جميع الشعب التي تدرسها:</p>
-                    <div id="sec-checks" class="grid grid-cols-5 gap-2 bg-gray-50 p-3 rounded-xl"></div>
+                <div id="teacherWrapper" class="hidden space-y-3 border-t pt-4">
+                    <input type="text" id="uSubject" class="w-full p-4 bg-green-50 rounded-2xl" placeholder="المادة الدراسية">
+                    <p class="text-[10px] font-bold text-gray-500 mr-2">حدد جميع الشعب التي تدرسها:</p>
+                    <div id="multiSections" class="grid grid-cols-5 gap-2 p-2 bg-white rounded-xl"></div>
                 </div>
 
-                <button onclick="login()" class="w-full bg-blue-900 text-white py-5 rounded-2xl font-black text-lg shadow-xl hover:bg-blue-800 transition-all">دخول للمنصة</button>
+                <button onclick="attemptLogin()" class="w-full bg-blue-900 text-white py-5 rounded-[2rem] font-black text-xl shadow-2xl hover:bg-blue-800 active:scale-95 transition-all mt-6">دخول المنصة</button>
             </div>
         </div>
     </div>
 
-    <div id="app" class="hidden flex flex-col h-screen overflow-hidden">
-        <header class="glass-header text-white p-4 flex justify-between items-center shadow-2xl z-50">
+    <div id="app" class="hidden flex flex-col h-screen">
+        <header class="bg-blue-900 text-white p-5 flex justify-between items-center shadow-xl z-50">
             <div class="flex items-center gap-3">
-                <img id="nav-img" class="w-12 h-12 rounded-full border-2 border-white object-cover">
-                <div><h2 id="nav-name" class="text-xs font-bold"></h2><p id="nav-info" class="text-[9px] text-blue-200"></p></div>
+                <img id="navImg" class="w-12 h-12 rounded-full border-2 border-amber-400 object-cover">
+                <div>
+                    <h2 id="navName" class="text-sm font-black"></h2>
+                    <p id="navMeta" class="text-[9px] text-blue-200 font-bold uppercase"></p>
+                </div>
             </div>
-            <button onclick="logout()" class="bg-red-600 px-4 py-2 rounded-xl text-[10px] font-bold shadow-lg">خروج</button>
+            <button onclick="logout()" class="bg-red-500/20 hover:bg-red-600 px-4 py-2 rounded-full text-[10px] font-bold border border-red-500/50">تسجيل خروج</button>
         </header>
 
-        <main class="flex-grow overflow-y-auto p-4 pb-28">
-            <div id="pub-box" class="hidden card p-4 mb-6 border-2 border-dashed border-blue-200">
-                <textarea id="p-text" class="w-full p-3 bg-gray-50 rounded-xl text-sm outline-none" rows="3" placeholder="اكتب منشورا جديدا..."></textarea>
-                <div class="flex gap-2 mt-2">
-                    <button class="bg-gray-100 p-2 rounded-xl text-xs">🖼️ صورة</button>
-                    <button onclick="addPost()" class="flex-grow bg-blue-900 text-white font-bold rounded-xl text-xs">نشر في القنوات</button>
+        <main class="flex-grow overflow-y-auto p-4 pb-32">
+            <div id="publishPanel" class="hidden bg-white p-5 rounded-[2rem] shadow-lg mb-6 border-2 border-blue-100">
+                <textarea id="postContent" class="w-full p-4 bg-gray-50 rounded-2xl text-sm outline-none border-none" rows="3" placeholder="ماذا تريد أن تنشر لطلابك؟"></textarea>
+                <div class="flex gap-2 mt-4">
+                    <button class="bg-gray-100 p-3 rounded-2xl flex-1 text-xs font-bold">📷 صورة</button>
+                    <button class="bg-gray-100 p-3 rounded-2xl flex-1 text-xs font-bold">📎 ملف</button>
+                    <button onclick="createPost()" class="bg-blue-900 text-white p-3 rounded-2xl flex-[2] font-black text-xs shadow-lg">نشر في القناة</button>
                 </div>
             </div>
 
-            <div id="tab-home" class="tab-content space-y-4"></div>
-
-            <div id="tab-chat" class="tab-content hidden flex flex-col h-full">
-                <div id="chat-msgs" class="flex-grow overflow-y-auto space-y-3 p-2"></div>
-                <div class="p-3 bg-white rounded-2xl shadow-xl flex gap-2 border">
-                    <input type="text" id="c-inp" class="flex-grow text-sm outline-none" placeholder="اكتب رسالة لشعبتك...">
-                    <button onclick="sendChat()" class="bg-blue-900 text-white p-3 px-6 rounded-xl">🚀</button>
+            <div id="view-home" class="tab-content active space-y-4"></div>
+            <div id="view-chat" class="tab-content h-full flex flex-col">
+                <div id="chatBox" class="flex-grow overflow-y-auto space-y-3 p-2 bg-white/50 rounded-3xl mb-4"></div>
+                <div class="flex gap-2 bg-white p-2 rounded-full shadow-xl">
+                    <button class="p-3">📷</button>
+                    <input type="text" id="chatInput" class="flex-grow outline-none text-sm" placeholder="اكتب رسالة لشعبتك...">
+                    <button onclick="sendMessage()" class="bg-blue-900 text-white px-6 rounded-full font-bold">إرسال</button>
                 </div>
             </div>
-
-            <div id="tab-admin" class="tab-content hidden space-y-3">
-                <h3 class="font-black text-blue-900 border-b pb-2">سجل الطلاب والصور</h3>
-                <div id="students-list" class="space-y-2"></div>
+            <div id="view-admin" class="tab-content space-y-4">
+                <h3 class="font-black text-blue-900 border-b-2 border-blue-900 inline-block pb-1">سجل الطلاب المسجلين</h3>
+                <div id="adminList" class="grid grid-cols-1 gap-2"></div>
             </div>
         </main>
 
-        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-4 shadow-2xl z-50">
-            <button onclick="showTab('home')" class="flex flex-col items-center"><span class="text-2xl">📢</span><span class="text-[9px] font-bold">القنوات</span></button>
-            <button onclick="showTab('chat')" id="n-chat" class="flex flex-col items-center"><span class="text-2xl">💬</span><span class="text-[9px] font-bold">دردشة الشعبة</span></button>
-            <button onclick="showTab('admin')" id="n-admin" class="hidden flex flex-col items-center"><span class="text-2xl">📊</span><span class="text-[9px] font-bold">الطلاب</span></button>
+        <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t flex justify-around p-4 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-50">
+            <button onclick="switchTab('home')" class="flex flex-col items-center gap-1 text-blue-900"><span class="text-2xl">📢</span><span class="text-[10px] font-black">القنوات</span></button>
+            <button onclick="switchTab('chat')" id="navChat" class="flex flex-col items-center gap-1 text-gray-400"><span class="text-2xl">💬</span><span class="text-[10px] font-black">الدردشة</span></button>
+            <button onclick="switchTab('admin')" id="navAdmin" class="hidden flex flex-col items-center gap-1 text-gray-400"><span class="text-2xl">📊</span><span class="text-[10px] font-black">الإدارة</span></button>
         </nav>
     </div>
 
     <script>
         let me = null;
-        const PASSWORDS = {"مدير":"111", "معاون":"222", "مدرس":"333"};
-        const sects = ["أ","ب","ج","د","هـ","و","ز","ح","ط","ي"];
+        const KEY = 'shrqia_final_v1';
+        const RULES = {"مدير": "1010", "معاون": "2020", "مدرس": "3030"};
+        const SECTS = ["أ", "ب", "ج", "د", "هـ", "و", "ز", "ح", "ط", "ي"];
 
-        // توليد مربعات المدرس
-        sects.forEach(s => document.getElementById('sec-checks').innerHTML += `<label class="text-[10px] flex items-center gap-1"><input type="checkbox" value="${s}"> ${s}</label>`);
+        // ملء الشعب للمدرس
+        const multiSec = document.getElementById('multiSections');
+        SECTS.forEach(s => {
+            multiSec.innerHTML += `<label class="flex items-center gap-1 text-[10px] font-bold cursor-pointer"><input type="checkbox" name="tSects" value="${s}" class="w-3 h-3"> ${s}</label>`;
+        });
 
+        // استعادة الجلسة (المطلب رقم 7)
         window.onload = () => {
-            const saved = localStorage.getItem('school_data_2026');
-            if(saved) { me = JSON.parse(saved); enter(); }
+            const saved = localStorage.getItem(KEY);
+            if (saved) { me = JSON.parse(saved); renderApp(); }
         };
 
-        function previewImg(e) {
-            const r = new FileReader();
-            r.onload = () => document.getElementById('p-img').src = r.result;
-            r.readAsDataURL(e.target.files[0]);
+        function handleImage(e) {
+            const reader = new FileReader();
+            reader.onload = () => document.getElementById('previewImg').src = reader.result;
+            reader.readAsDataURL(e.target.files[0]);
         }
 
-        function handleRole() {
-            const r = document.getElementById('u-role').value;
-            document.getElementById('u-pass').classList.toggle('hidden', r === 'طالب' || r === 'ولي امر');
-            document.getElementById('tea-group').classList.toggle('hidden', r !== 'مدرس');
+        function toggleRoleUI() {
+            const r = document.getElementById('uRole').value;
+            document.getElementById('passWrapper').classList.toggle('hidden', r === 'طالب' || r === 'ولي امر');
+            document.getElementById('teacherWrapper').classList.toggle('hidden', r !== 'مدرس');
         }
 
-        function login() {
-            const role = document.getElementById('u-role').value;
-            const name = document.getElementById('u-name').value;
-            const pass = document.getElementById('u-pass').value;
-            const img = document.getElementById('p-img').src;
+        function attemptLogin() {
+            const name = document.getElementById('uName').value;
+            const role = document.getElementById('uRole').value;
+            const pass = document.getElementById('uPass').value;
+            const img = document.getElementById('previewImg').src;
 
-            if(!name || img.includes('placeholder')) return alert("الاسم والصورة مطلوبان!");
-            if(PASSWORDS[role] && pass !== PASSWORDS[role]) return alert("الرمز السري غير صحيح!");
+            if (!name || img.includes('placeholder')) return alert("الاسم والصورة الشخصية متطلبات أساسية!");
+            
+            // التحقق من الرمز السري (المطلب رقم 2، 3، 4)
+            if (RULES[role] && pass !== RULES[role]) return alert("الرمز السري غير صحيح لهذه الرتبة!");
 
-            let tSecs = [];
-            document.querySelectorAll('#sec-checks input:checked').forEach(c => tSecs.push(c.value));
+            let chosenSects = [];
+            document.querySelectorAll('input[name="tSects"]:checked').forEach(c => chosenSects.push(c.value));
 
-            me = { name, role, img, grade: document.getElementById('u-grade').value, sec: document.getElementById('u-sec').value, sub: document.getElementById('u-sub').value, tSecs };
-            localStorage.setItem('school_data_2026', JSON.stringify(me));
-            enter();
+            me = {
+                name, role, img,
+                grade: document.getElementById('uGrade').value,
+                section: document.getElementById('uSection').value,
+                subject: document.getElementById('uSubject').value,
+                mySects: chosenSects
+            };
+
+            localStorage.setItem(KEY, JSON.stringify(me));
+            renderApp();
         }
 
-        function enter() {
+        function renderApp() {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
-            document.getElementById('nav-img').src = me.img;
-            document.getElementById('nav-name').innerText = me.name;
-            document.getElementById('nav-info').innerText = `${me.role} | ${me.grade}-${me.sec}`;
+            document.getElementById('navImg').src = me.img;
+            document.getElementById('navName').innerText = me.name;
+            document.getElementById('navMeta').innerText = `${me.role} | ${me.grade} - ${me.section}`;
 
-            if(me.role !== 'طالب' && me.role !== 'ولي امر') document.getElementById('pub-box').classList.remove('hidden');
-            if(me.role === 'مدير' || me.role === 'معاون') document.getElementById('n-admin').classList.remove('hidden');
-            if(me.role === 'ولي امر') document.getElementById('n-chat').classList.add('hidden');
+            // صلاحيات النشر
+            if (me.role !== 'طالب' && me.role !== 'ولي امر') {
+                document.getElementById('publishPanel').classList.remove('hidden');
+            }
+            if (me.role === 'مدير' || me.role === 'معاون') {
+                document.getElementById('navAdmin').classList.remove('hidden');
+            }
+            if (me.role === 'ولي امر') {
+                document.getElementById('navChat').classList.add('hidden');
+            }
         }
 
-        function showTab(t) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.add('hidden'));
-            document.getElementById('tab-'+t).classList.remove('hidden');
-            if(t === 'admin') loadStudents();
+        function switchTab(t) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.getElementById('view-' + t).classList.add('active');
+            if (t === 'admin') loadAdminStats();
         }
 
-        function addPost() {
-            const txt = document.getElementById('p-text').value; if(!txt) return;
-            const html = `<div class="telegram-post">
-                <div class="flex items-center gap-2 mb-2">
-                    <img src="${me.img}" class="w-6 h-6 rounded-full border">
-                    <b class="text-[11px] text-blue-900">${me.role === 'مدرس' ? 'قناة '+me.sub : 'الإدارة'}</b>
-                </div>
-                <p class="text-sm text-gray-800">${txt}</p>
-                <span class="text-[8px] text-gray-400 mt-2 block">${me.role === 'مدرس' ? 'موجه لشعب: '+me.tSecs : 'عام'}</span>
-            </div>`;
-            document.getElementById('tab-home').insertAdjacentHTML('afterbegin', html);
-            document.getElementById('p-text').value = "";
+        function createPost() {
+            const content = document.getElementById('postContent').value;
+            if (!content) return;
+
+            const postHTML = `
+                <div class="telegram-post">
+                    <div class="flex items-center gap-2 mb-3">
+                        <img src="${me.img}" class="w-7 h-7 rounded-full border border-blue-200">
+                        <b class="text-[11px] text-blue-900">${me.role === 'مدرس' ? 'قناة المادة: ' + me.subject : 'تبليغ من الإدارة'}</b>
+                    </div>
+                    <p class="text-sm text-gray-700 leading-relaxed">${content}</p>
+                    <div class="mt-3 pt-2 border-t border-gray-50 flex justify-between items-center text-[8px] font-bold text-gray-400 italic">
+                        <span>بواسطة الأستاذ: ${me.name}</span>
+                        <span>شعب: ${me.role === 'مدرس' ? me.mySects : 'الكل'}</span>
+                    </div>
+                </div>`;
+            
+            document.getElementById('view-home').insertAdjacentHTML('afterbegin', postHTML);
+            document.getElementById('postContent').value = "";
         }
 
-        function sendChat() {
-            const t = document.getElementById('c-inp').value; if(!t) return;
-            const html = `<div class="chat-bubble my-msg">${t}</div>`;
-            document.getElementById('chat-msgs').innerHTML += html;
-            document.getElementById('c-inp').value = "";
-            document.getElementById('chat-msgs').scrollTop = document.getElementById('chat-msgs').scrollHeight;
+        function sendMessage() {
+            const txt = document.getElementById('chatInput').value;
+            if(!txt) return;
+            const msg = `<div class="chat-bubble bg-blue-900 text-white mr-auto rounded-br-none">${txt}</div>`;
+            document.getElementById('chatBox').innerHTML += msg;
+            document.getElementById('chatInput').value = "";
+            document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
         }
 
-        function loadStudents() {
-            document.getElementById('students-list').innerHTML = `
-                <div class="flex items-center gap-3 bg-white p-3 rounded-2xl shadow-sm">
-                    <img src="${me.img}" class="w-10 h-10 rounded-full border">
-                    <div><p class="text-xs font-bold">${me.name}</p><p class="text-[9px] text-gray-500">${me.role} - ${me.grade}/${me.sec}</p></div>
+        function loadAdminStats() {
+            document.getElementById('adminList').innerHTML = `
+                <div class="bg-white p-4 rounded-2xl flex items-center justify-between shadow-sm border border-gray-100">
+                    <div class="flex items-center gap-3">
+                        <img src="${me.img}" class="w-10 h-10 rounded-full object-cover">
+                        <div>
+                            <p class="text-xs font-black">${me.name}</p>
+                            <p class="text-[9px] text-gray-400 font-bold uppercase">${me.role} - شعبة ${me.section}</p>
+                        </div>
+                    </div>
+                    <span class="bg-green-100 text-green-700 text-[8px] px-2 py-1 rounded-full font-bold">متصل الآن</span>
                 </div>`;
         }
 
-        function logout() { localStorage.removeItem('school_data_2026'); location.reload(); }
+        function logout() { localStorage.removeItem(KEY); location.reload(); }
     </script>
 </body>
 </html>
