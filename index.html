@@ -3,40 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة الإعدادية الشرقية - المطور محمد عدي</title>
+    <title>منصة الإعدادية الشرقية | المطور محمد عدي</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700;900&display=swap');
-        body { font-family: 'Tajawal', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        body { font-family: 'Tajawal', sans-serif; background: #f8fafc; }
         .hidden { display: none !important; }
-        .glass-card { background: rgba(255, 255, 255, 0.95); border-radius: 2rem; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1); }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .telegram-post { background: white; border-radius: 1.25rem; padding: 1.25rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border-right: 6px solid #1e3a8a; }
-        .chat-bubble { max-width: 85%; padding: 12px; border-radius: 18px; font-size: 14px; margin-bottom: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .app-card { background: white; border-radius: 1.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .telegram-post { background: white; border-right: 6px solid #1e3a8a; border-radius: 1rem; padding: 15px; margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
     </style>
 </head>
 <body class="min-h-screen">
 
     <div id="login-screen" class="max-w-md mx-auto my-10 p-4">
-        <div class="glass-card p-8 border-t-[12px] border-blue-900">
-            <div class="text-center mb-8">
+        <div class="app-card p-8 border-t-[10px] border-blue-900">
+            <div class="text-center mb-6">
                 <h1 class="text-3xl font-black text-blue-900">الإعدادية الشرقية</h1>
-                <p class="text-[11px] font-bold text-amber-700 mt-2 tracking-widest uppercase">بإشراف المطور: محمد عدي مؤيد</p>
+                <p class="text-xs font-bold text-amber-700 mt-1 uppercase">صانع المنصة: محمد عدي مؤيد</p>
             </div>
 
             <div class="space-y-4">
-                <div class="relative w-28 h-28 mx-auto group">
-                    <img id="previewImg" src="https://via.placeholder.com/150" class="w-full h-full rounded-full border-4 border-blue-100 object-cover shadow-xl">
-                    <label class="absolute bottom-0 right-0 bg-blue-900 text-white p-2 rounded-full cursor-pointer hover:scale-110 transition">
-                        📷 <input type="file" id="userPhoto" class="hidden" onchange="handleImage(event)">
-                    </label>
+                <div class="text-center">
+                    <img id="p-img" src="https://via.placeholder.com/120" class="w-24 h-24 rounded-full mx-auto border-4 border-blue-50 object-cover shadow-md">
+                    <input type="file" id="u-file" class="hidden" onchange="preview(event)">
+                    <button onclick="document.getElementById('u-file').click()" class="text-[10px] bg-blue-900 text-white px-4 py-1 rounded-full mt-2 font-bold italic">ارفع صورتك الشخصية</button>
                 </div>
 
-                <input type="text" id="uName" class="w-full p-4 bg-gray-50 border-2 border-transparent focus:border-blue-900 rounded-2xl outline-none transition" placeholder="الاسم الثلاثي الكامل">
-                <input type="tel" id="uPhone" class="w-full p-4 bg-gray-50 border-2 border-transparent focus:border-blue-900 rounded-2xl outline-none transition" placeholder="رقم الهاتف">
+                <input type="text" id="u-name" class="w-full p-4 bg-gray-50 border rounded-2xl text-sm outline-none" placeholder="الاسم الثلاثي الكامل">
+                <input type="tel" id="u-phone" class="w-full p-4 bg-gray-50 border rounded-2xl text-sm outline-none" placeholder="رقم الهاتف">
                 
-                <select id="uRole" class="w-full p-4 bg-gray-100 border-none rounded-2xl font-bold text-blue-900" onchange="toggleRoleUI()">
+                <select id="u-role" class="w-full p-4 bg-gray-100 border-none rounded-2xl font-bold text-sm" onchange="toggleUI()">
                     <option value="طالب">🎓 طالب</option>
                     <option value="مدرس">👨‍🏫 مدرس مادة</option>
                     <option value="مدير">🏛️ مدير المدرسة</option>
@@ -44,199 +40,127 @@
                     <option value="ولي امر">👪 ولي أمر طالب</option>
                 </select>
 
-                <div id="passWrapper" class="hidden">
-                    <input type="password" id="uPass" class="w-full p-4 bg-red-50 border-2 border-red-200 rounded-2xl outline-none" placeholder="أدخل الرمز السري الخاص برتبتك">
+                <div id="pass-div" class="hidden">
+                    <input type="password" id="u-pass" class="w-full p-4 border-2 border-red-100 bg-red-50 rounded-2xl text-sm" placeholder="الرمز السري الخاص">
                 </div>
 
-                <div id="eduWrapper" class="grid grid-cols-2 gap-3">
-                    <select id="uGrade" class="p-4 bg-blue-50 rounded-2xl font-bold"><option>الرابع</option><option>الخامس</option><option>السادس</option></select>
-                    <select id="uSection" class="p-4 bg-blue-50 rounded-2xl font-bold">
+                <div id="stu-div" class="grid grid-cols-2 gap-2">
+                    <select id="u-grade" class="p-4 bg-blue-50 border rounded-2xl text-sm font-bold"><option>الرابع</option><option>الخامس</option><option>السادس</option></select>
+                    <select id="u-sec" class="p-4 bg-blue-50 border rounded-2xl text-sm font-bold">
                         <option>أ</option><option>ب</option><option>ج</option><option>د</option><option>هـ</option>
                         <option>و</option><option>ز</option><option>ح</option><option>ط</option><option>ي</option>
                     </select>
                 </div>
 
-                <div id="teacherWrapper" class="hidden space-y-3 border-t pt-4">
-                    <input type="text" id="uSubject" class="w-full p-4 bg-green-50 rounded-2xl" placeholder="المادة الدراسية">
-                    <p class="text-[10px] font-bold text-gray-500 mr-2">حدد جميع الشعب التي تدرسها:</p>
-                    <div id="multiSections" class="grid grid-cols-5 gap-2 p-2 bg-white rounded-xl"></div>
+                <div id="tea-div" class="hidden space-y-3 border-t pt-4">
+                    <input type="text" id="u-sub" class="w-full p-4 border rounded-2xl text-sm" placeholder="المادة الدراسية">
+                    <p class="text-[10px] font-bold text-blue-900">اختر الشعب التي تدرسها (يمكن اختيار أكثر من شعبة):</p>
+                    <div id="multi-sects" class="grid grid-cols-5 gap-2 bg-gray-50 p-3 rounded-xl"></div>
                 </div>
 
-                <button onclick="attemptLogin()" class="w-full bg-blue-900 text-white py-5 rounded-[2rem] font-black text-xl shadow-2xl hover:bg-blue-800 active:scale-95 transition-all mt-6">دخول المنصة</button>
+                <button onclick="login()" class="w-full bg-blue-900 text-white py-5 rounded-2xl font-black text-lg shadow-xl hover:bg-blue-800 transition-all">تسجيل الدخول</button>
             </div>
         </div>
     </div>
 
-    <div id="app" class="hidden flex flex-col h-screen">
-        <header class="bg-blue-900 text-white p-5 flex justify-between items-center shadow-xl z-50">
+    <div id="app" class="hidden flex flex-col h-screen overflow-hidden">
+        <header class="bg-blue-900 text-white p-5 flex justify-between items-center shadow-lg">
             <div class="flex items-center gap-3">
-                <img id="navImg" class="w-12 h-12 rounded-full border-2 border-amber-400 object-cover">
-                <div>
-                    <h2 id="navName" class="text-sm font-black"></h2>
-                    <p id="navMeta" class="text-[9px] text-blue-200 font-bold uppercase"></p>
-                </div>
+                <img id="nav-img" class="w-12 h-12 rounded-full border-2 border-white object-cover">
+                <div><h2 id="nav-name" class="text-sm font-black"></h2><p id="nav-meta" class="text-[9px] text-blue-200 font-bold uppercase"></p></div>
             </div>
-            <button onclick="logout()" class="bg-red-500/20 hover:bg-red-600 px-4 py-2 rounded-full text-[10px] font-bold border border-red-500/50">تسجيل خروج</button>
+            <button onclick="logout()" class="bg-red-600 px-4 py-2 rounded-xl text-[10px] font-bold">خروج</button>
         </header>
 
         <main class="flex-grow overflow-y-auto p-4 pb-32">
-            <div id="publishPanel" class="hidden bg-white p-5 rounded-[2rem] shadow-lg mb-6 border-2 border-blue-100">
-                <textarea id="postContent" class="w-full p-4 bg-gray-50 rounded-2xl text-sm outline-none border-none" rows="3" placeholder="ماذا تريد أن تنشر لطلابك؟"></textarea>
-                <div class="flex gap-2 mt-4">
-                    <button class="bg-gray-100 p-3 rounded-2xl flex-1 text-xs font-bold">📷 صورة</button>
-                    <button class="bg-gray-100 p-3 rounded-2xl flex-1 text-xs font-bold">📎 ملف</button>
-                    <button onclick="createPost()" class="bg-blue-900 text-white p-3 rounded-2xl flex-[2] font-black text-xs shadow-lg">نشر في القناة</button>
+            <div id="post-area" class="hidden app-card p-5 mb-6 border-2 border-blue-100">
+                <textarea id="post-txt" class="w-full p-3 bg-gray-50 rounded-xl text-sm outline-none" rows="3" placeholder="انشر درساً، صورة، أو تبليغاً..."></textarea>
+                <div class="flex gap-2 mt-2">
+                    <button class="bg-gray-100 p-2 rounded-xl text-[10px] flex-1">📷 صورة</button>
+                    <button class="bg-gray-100 p-2 rounded-xl text-[10px] flex-1">📎 ملف</button>
+                    <button onclick="publish()" class="bg-blue-900 text-white p-2 rounded-xl flex-[2] text-[10px] font-bold">نشر الآن</button>
                 </div>
             </div>
-
-            <div id="view-home" class="tab-content active space-y-4"></div>
-            <div id="view-chat" class="tab-content h-full flex flex-col">
-                <div id="chatBox" class="flex-grow overflow-y-auto space-y-3 p-2 bg-white/50 rounded-3xl mb-4"></div>
-                <div class="flex gap-2 bg-white p-2 rounded-full shadow-xl">
-                    <button class="p-3">📷</button>
-                    <input type="text" id="chatInput" class="flex-grow outline-none text-sm" placeholder="اكتب رسالة لشعبتك...">
-                    <button onclick="sendMessage()" class="bg-blue-900 text-white px-6 rounded-full font-bold">إرسال</button>
-                </div>
-            </div>
-            <div id="view-admin" class="tab-content space-y-4">
-                <h3 class="font-black text-blue-900 border-b-2 border-blue-900 inline-block pb-1">سجل الطلاب المسجلين</h3>
-                <div id="adminList" class="grid grid-cols-1 gap-2"></div>
-            </div>
+            <div id="feed" class="space-y-4"></div>
         </main>
 
-        <nav class="fixed bottom-0 left-0 right-0 bg-white/90 backdrop-blur-md border-t flex justify-around p-4 shadow-[0_-10px_20px_rgba(0,0,0,0.05)] z-50">
-            <button onclick="switchTab('home')" class="flex flex-col items-center gap-1 text-blue-900"><span class="text-2xl">📢</span><span class="text-[10px] font-black">القنوات</span></button>
-            <button onclick="switchTab('chat')" id="navChat" class="flex flex-col items-center gap-1 text-gray-400"><span class="text-2xl">💬</span><span class="text-[10px] font-black">الدردشة</span></button>
-            <button onclick="switchTab('admin')" id="navAdmin" class="hidden flex flex-col items-center gap-1 text-gray-400"><span class="text-2xl">📊</span><span class="text-[10px] font-black">الإدارة</span></button>
+        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-4 shadow-2xl z-50">
+            <button class="flex flex-col items-center gap-1"><span class="text-2xl">📢</span><span class="text-[10px] font-black">القنوات</span></button>
+            <button id="chat-btn" class="flex flex-col items-center gap-1"><span class="text-2xl">💬</span><span class="text-[10px] font-black">الدردشة</span></button>
+            <button id="admin-btn" class="hidden flex flex-col items-center gap-1"><span class="text-2xl">📊</span><span class="text-[10px] font-black">الإدارة</span></button>
         </nav>
     </div>
 
     <script>
-        let me = null;
-        const KEY = 'shrqia_final_v1';
-        const RULES = {"مدير": "1010", "معاون": "2020", "مدرس": "3030"};
-        const SECTS = ["أ", "ب", "ج", "د", "هـ", "و", "ز", "ح", "ط", "ي"];
+        let u = null;
+        const KEYS = {"مدير":"1010", "معاون":"2020", "مدرس":"333"};
+        const SLIST = ["أ","ب","ج","د","هـ","و","ز","ح","ط","ي"];
 
-        // ملء الشعب للمدرس
-        const multiSec = document.getElementById('multiSections');
-        SECTS.forEach(s => {
-            multiSec.innerHTML += `<label class="flex items-center gap-1 text-[10px] font-bold cursor-pointer"><input type="checkbox" name="tSects" value="${s}" class="w-3 h-3"> ${s}</label>`;
+        SLIST.forEach(s => {
+            document.getElementById('multi-sects').innerHTML += `<label class="text-[10px] flex items-center gap-1 font-bold cursor-pointer"><input type="checkbox" value="${s}" name="tSects"> ${s}</label>`;
         });
 
-        // استعادة الجلسة (المطلب رقم 7)
         window.onload = () => {
-            const saved = localStorage.getItem(KEY);
-            if (saved) { me = JSON.parse(saved); renderApp(); }
-        };
-
-        function handleImage(e) {
-            const reader = new FileReader();
-            reader.onload = () => document.getElementById('previewImg').src = reader.result;
-            reader.readAsDataURL(e.target.files[0]);
+            const saved = localStorage.getItem('shrqia_final');
+            if(saved) { u = JSON.parse(saved); start(); }
         }
 
-        function toggleRoleUI() {
-            const r = document.getElementById('uRole').value;
-            document.getElementById('passWrapper').classList.toggle('hidden', r === 'طالب' || r === 'ولي امر');
-            document.getElementById('teacherWrapper').classList.toggle('hidden', r !== 'مدرس');
+        function preview(e) {
+            const r = new FileReader();
+            r.onload = () => document.getElementById('p-img').src = r.result;
+            r.readAsDataURL(e.target.files[0]);
         }
 
-        function attemptLogin() {
-            const name = document.getElementById('uName').value;
-            const role = document.getElementById('uRole').value;
-            const pass = document.getElementById('uPass').value;
-            const img = document.getElementById('previewImg').src;
-
-            if (!name || img.includes('placeholder')) return alert("الاسم والصورة الشخصية متطلبات أساسية!");
-            
-            // التحقق من الرمز السري (المطلب رقم 2، 3، 4)
-            if (RULES[role] && pass !== RULES[role]) return alert("الرمز السري غير صحيح لهذه الرتبة!");
-
-            let chosenSects = [];
-            document.querySelectorAll('input[name="tSects"]:checked').forEach(c => chosenSects.push(c.value));
-
-            me = {
-                name, role, img,
-                grade: document.getElementById('uGrade').value,
-                section: document.getElementById('uSection').value,
-                subject: document.getElementById('uSubject').value,
-                mySects: chosenSects
-            };
-
-            localStorage.setItem(KEY, JSON.stringify(me));
-            renderApp();
+        function toggleUI() {
+            const r = document.getElementById('u-role').value;
+            document.getElementById('pass-div').classList.toggle('hidden', r === 'طالب' || r === 'ولي امر');
+            document.getElementById('tea-div').classList.toggle('hidden', r !== 'مدرس');
         }
 
-        function renderApp() {
+        function login() {
+            const role = document.getElementById('u-role').value;
+            const pass = document.getElementById('u-pass').value;
+            const name = document.getElementById('u-name').value;
+            const img = document.getElementById('p-img').src;
+
+            if(!name || img.includes('placeholder')) return alert("الاسم وصورة الحساب مطلوبة!");
+            if(KEYS[role] && pass !== KEYS[role]) return alert("الرمز السري غير صحيح!");
+
+            let tSects = [];
+            document.querySelectorAll('input[name="tSects"]:checked').forEach(c => tSects.push(c.value));
+
+            u = { name, role, img, grade: document.getElementById('u-grade').value, sec: document.getElementById('u-sec').value, sub: document.getElementById('u-sub').value, tSects };
+            localStorage.setItem('shrqia_final', JSON.stringify(u));
+            start();
+        }
+
+        function start() {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
-            document.getElementById('navImg').src = me.img;
-            document.getElementById('navName').innerText = me.name;
-            document.getElementById('navMeta').innerText = `${me.role} | ${me.grade} - ${me.section}`;
+            document.getElementById('nav-img').src = u.img;
+            document.getElementById('nav-name').innerText = u.name;
+            document.getElementById('nav-meta').innerText = `${u.role} | ${u.grade}-${u.sec}`;
 
-            // صلاحيات النشر
-            if (me.role !== 'طالب' && me.role !== 'ولي امر') {
-                document.getElementById('publishPanel').classList.remove('hidden');
-            }
-            if (me.role === 'مدير' || me.role === 'معاون') {
-                document.getElementById('navAdmin').classList.remove('hidden');
-            }
-            if (me.role === 'ولي امر') {
-                document.getElementById('navChat').classList.add('hidden');
-            }
+            if(u.role !== 'طالب' && u.role !== 'ولي امر') document.getElementById('post-area').classList.remove('hidden');
+            if(u.role === 'مدير' || u.role === 'معاون') document.getElementById('admin-btn').classList.remove('hidden');
+            if(u.role === 'ولي امر') document.getElementById('chat-btn').classList.add('hidden');
         }
 
-        function switchTab(t) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.getElementById('view-' + t).classList.add('active');
-            if (t === 'admin') loadAdminStats();
+        function publish() {
+            const txt = document.getElementById('post-txt').value; if(!txt) return;
+            const html = `<div class="telegram-post">
+                <b class="text-xs text-blue-900">${u.role === 'مدرس' ? 'قناة '+u.sub : 'الإدارة المركزية'}</b>
+                <p class="text-sm mt-1 text-gray-700 leading-relaxed">${txt}</p>
+                <div class="flex justify-between mt-3 text-[8px] font-bold text-gray-400 italic">
+                    <span>المرسل: ${u.name}</span>
+                    <span>الشعب: ${u.role === 'مدرس' ? u.tSects.join(', ') : 'الكل'}</span>
+                </div>
+            </div>`;
+            document.getElementById('feed').insertAdjacentHTML('afterbegin', html);
+            document.getElementById('post-txt').value = "";
         }
 
-        function createPost() {
-            const content = document.getElementById('postContent').value;
-            if (!content) return;
-
-            const postHTML = `
-                <div class="telegram-post">
-                    <div class="flex items-center gap-2 mb-3">
-                        <img src="${me.img}" class="w-7 h-7 rounded-full border border-blue-200">
-                        <b class="text-[11px] text-blue-900">${me.role === 'مدرس' ? 'قناة المادة: ' + me.subject : 'تبليغ من الإدارة'}</b>
-                    </div>
-                    <p class="text-sm text-gray-700 leading-relaxed">${content}</p>
-                    <div class="mt-3 pt-2 border-t border-gray-50 flex justify-between items-center text-[8px] font-bold text-gray-400 italic">
-                        <span>بواسطة الأستاذ: ${me.name}</span>
-                        <span>شعب: ${me.role === 'مدرس' ? me.mySects : 'الكل'}</span>
-                    </div>
-                </div>`;
-            
-            document.getElementById('view-home').insertAdjacentHTML('afterbegin', postHTML);
-            document.getElementById('postContent').value = "";
-        }
-
-        function sendMessage() {
-            const txt = document.getElementById('chatInput').value;
-            if(!txt) return;
-            const msg = `<div class="chat-bubble bg-blue-900 text-white mr-auto rounded-br-none">${txt}</div>`;
-            document.getElementById('chatBox').innerHTML += msg;
-            document.getElementById('chatInput').value = "";
-            document.getElementById('chatBox').scrollTop = document.getElementById('chatBox').scrollHeight;
-        }
-
-        function loadAdminStats() {
-            document.getElementById('adminList').innerHTML = `
-                <div class="bg-white p-4 rounded-2xl flex items-center justify-between shadow-sm border border-gray-100">
-                    <div class="flex items-center gap-3">
-                        <img src="${me.img}" class="w-10 h-10 rounded-full object-cover">
-                        <div>
-                            <p class="text-xs font-black">${me.name}</p>
-                            <p class="text-[9px] text-gray-400 font-bold uppercase">${me.role} - شعبة ${me.section}</p>
-                        </div>
-                    </div>
-                    <span class="bg-green-100 text-green-700 text-[8px] px-2 py-1 rounded-full font-bold">متصل الآن</span>
-                </div>`;
-        }
-
-        function logout() { localStorage.removeItem(KEY); location.reload(); }
+        function logout() { localStorage.removeItem('shrqia_final'); location.reload(); }
     </script>
 </body>
 </html>
