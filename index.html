@@ -3,34 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة الإعدادية الشرقية - محمد عدي مؤيد</title>
+    <title>منصة الإعدادية الشرقية - بإشراف محمد عدي مؤيد</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
-        body { font-family: 'Tajawal', sans-serif; background: #f1f5f9; }
+        body { font-family: 'Tajawal', sans-serif; background-color: #f0f2f5; }
         .hidden { display: none !important; }
-        .app-card { background: white; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); padding: 15px; margin-bottom: 15px; }
-        .channel-style { background: #e7eff6; border-radius: 15px; padding: 10px; border-right: 5px solid #1e3a8a; }
-        .chat-bubble { max-width: 80%; padding: 10px; border-radius: 15px; font-size: 13px; margin: 5px 0; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .channel-post { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-right: 6px solid #1e3a8a; margin-bottom: 15px; }
+        .chat-msg { background: #dcf8c6; padding: 10px; border-radius: 10px; margin-bottom: 5px; max-width: 80%; }
     </style>
 </head>
 <body class="min-h-screen">
 
-    <div id="login-screen" class="max-w-md mx-auto my-10 p-6 bg-white rounded-[2.5rem] shadow-2xl border-t-8 border-blue-900">
-        <h1 class="text-2xl font-bold text-center text-blue-900">الإعدادية الشرقية</h1>
-        <p class="text-[10px] text-center font-bold text-gray-500 mb-6 italic">تطوير الطالب: محمد عدي مؤيد</p>
+    <div id="login-screen" class="max-w-md mx-auto my-10 p-6 bg-white rounded-3xl shadow-xl border-t-8 border-blue-900">
+        <h1 class="text-2xl font-bold text-center text-blue-900 mb-2">الإعدادية الشرقية</h1>
+        <p class="text-[10px] text-center font-bold text-gray-500 mb-6">المطور: محمد عدي مؤيد حمادي</p>
 
         <div class="space-y-3">
             <div class="text-center">
-                <img id="previewImg" src="https://via.placeholder.com/80" class="w-20 h-20 rounded-full mx-auto border-2 border-blue-900 object-cover">
-                <input type="file" id="userPhoto" class="hidden" onchange="loadPhoto(event)">
-                <button onclick="document.getElementById('userPhoto').click()" class="text-[10px] bg-blue-900 text-white px-3 py-1 rounded-full mt-2">تحميل صورة</button>
+                <img id="preview" src="https://via.placeholder.com/80" class="w-20 h-20 rounded-full mx-auto border-2 border-blue-900 object-cover">
+                <input type="file" id="uFile" class="hidden" onchange="handleImg(this)">
+                <button onclick="document.getElementById('uFile').click()" class="text-[10px] bg-blue-900 text-white px-4 py-1 rounded-full mt-2">رفع صورة الطالب/المدرس</button>
             </div>
 
-            <input type="text" id="regName" class="w-full p-3 border rounded-xl text-sm" placeholder="الاسم الثلاثي">
-            <input type="tel" id="regPhone" class="w-full p-3 border rounded-xl text-sm" placeholder="رقم الهاتف">
+            <input type="text" id="uName" class="w-full p-3 border rounded-xl text-sm" placeholder="الاسم الثلاثي">
+            <input type="tel" id="uPhone" class="w-full p-3 border rounded-xl text-sm" placeholder="رقم الهاتف">
             
-            <select id="regRole" class="w-full p-3 border rounded-xl font-bold text-sm bg-gray-50" onchange="updateUI()">
+            <select id="uRole" class="w-full p-3 border rounded-xl font-bold text-sm bg-gray-50" onchange="toggleRoleUI()">
                 <option value="طالب">طالب</option>
                 <option value="مدرس">مدرس</option>
                 <option value="مدير">مدير المدرسة</option>
@@ -38,137 +39,171 @@
                 <option value="ولي امر">ولي أمر طالب</option>
             </select>
 
-            <input type="password" id="regCode" class="hidden w-full p-3 border border-red-300 rounded-xl text-sm" placeholder="الرمز السري الخاص">
+            <input type="password" id="uCode" class="hidden w-full p-3 border border-red-300 rounded-xl text-sm" placeholder="الرمز السري الخاص">
 
-            <div id="edu-info" class="grid grid-cols-2 gap-2">
-                <select id="regGrade" class="p-3 border rounded-xl text-sm font-bold bg-blue-50">
-                    <option value="الرابع">الرابع</option><option value="الخامس">الخامس</option><option value="السادس">السادس</option>
+            <div id="edu-selection" class="grid grid-cols-2 gap-2">
+                <select id="uGrade" class="p-3 border rounded-xl text-sm font-bold bg-blue-50">
+                    <option>الرابع</option><option>الخامس</option><option>السادس</option>
                 </select>
-                <select id="regSection" class="p-3 border rounded-xl text-sm font-bold bg-blue-50">
-                    <option value="أ">أ</option><option value="ب">ب</option><option value="ج">ج</option><option value="د">د</option><option value="هـ">هـ</option><option value="و">و</option><option value="ز">ز</option><option value="ح">ح</option><option value="ط">ط</option><option value="ي">ي</option>
-                </select>
-            </div>
-
-            <div id="teacher-fields" class="hidden space-y-2 border-t pt-2">
-                <p class="text-[10px] font-bold">المادة التي تدرسها:</p>
-                <select id="regSubject" class="w-full p-3 border rounded-xl text-sm font-bold">
-                    <option value="الفيزياء">الفيزياء</option><option value="الكيمياء">الكيمياء</option><option value="الرياضيات">الرياضيات</option><option value="الأحياء">الأحياء</option><option value="اللغة العربية">اللغة العربية</option><option value="اللغة الانجليزية">اللغة الانجليزية</option><option value="الحاسوب">الحاسوب</option><option value="الاسلامية">الاسلامية</option>
+                <select id="uSection" class="p-3 border rounded-xl text-sm font-bold bg-blue-50">
+                    <option>أ</option><option>ب</option><option>ج</option><option>د</option><option>هـ</option>
+                    <option>و</option><option>ز</option><option>ح</option><option>ط</option><option>ي</option>
                 </select>
             </div>
 
-            <button onclick="startApp()" class="w-full bg-blue-900 text-white py-4 rounded-2xl font-bold shadow-lg mt-4">تسجيل الدخول</button>
+            <div id="teacher-spec" class="hidden border-t pt-2">
+                <p class="text-[10px] font-bold text-blue-800">المواد التي تدرسها:</p>
+                <input type="text" id="uSubject" class="w-full p-3 border rounded-xl text-sm mt-1" placeholder="مثال: الكيمياء والفيزياء">
+            </div>
+
+            <button onclick="doLogin()" class="w-full bg-blue-900 text-white py-4 rounded-2xl font-bold shadow-lg">دخول للمنصة</button>
         </div>
     </div>
 
     <div id="app" class="hidden flex flex-col h-screen">
-        <header class="bg-blue-900 text-white p-4 shadow-xl flex justify-between items-center">
-            <div class="flex items-center gap-3">
-                <img id="navPhoto" class="w-10 h-10 rounded-full border-2 border-white object-cover">
+        <header class="bg-blue-900 text-white p-4 flex justify-between items-center shadow-lg">
+            <div class="flex items-center gap-2">
+                <img id="navImg" class="w-10 h-10 rounded-full border border-white">
                 <div>
                     <h2 id="navName" class="text-xs font-bold"></h2>
-                    <p id="navInfo" class="text-[9px] text-blue-200"></p>
+                    <p id="navMeta" class="text-[8px] text-blue-200"></p>
                 </div>
             </div>
-            <div class="text-center"><p class="text-[10px] font-bold">الإعدادية الشرقية</p></div>
-            <button onclick="location.reload()" class="bg-red-600 p-1 px-3 rounded-full text-[10px]">خروج</button>
+            <button onclick="location.reload()" class="bg-red-600 px-3 py-1 rounded-full text-[10px]">خروج</button>
         </header>
 
-        <main class="flex-grow overflow-y-auto p-4 pb-28">
-            <div id="admin-publish" class="hidden app-card border-dashed border-2 border-blue-900">
-                <h3 class="text-xs font-bold mb-2">📢 نشر تبليغ رسمي (مدير/معاون)</h3>
-                <textarea id="adminMsg" class="w-full p-3 border rounded-xl text-sm" placeholder="اكتب ملاحظاتك هنا..."></textarea>
-                <button onclick="postAdmin()" class="w-full bg-blue-900 text-white mt-2 py-2 rounded-xl text-xs">نشر للجميع</button>
-            </div>
-
-            <div id="teacher-publish" class="hidden app-card border-blue-500 border-2">
-                <h3 class="text-xs font-bold mb-2">📂 قناة المدرس: <span id="subjectName"></span></h3>
-                <textarea id="lessonMsg" class="w-full p-3 border rounded-xl text-sm" placeholder="نشر درس، صورة، أو ملف..."></textarea>
-                <div class="flex gap-2 mt-2">
-                    <button class="bg-gray-200 px-4 py-2 rounded-xl text-xs">📷 صورة</button>
-                    <button class="bg-gray-200 px-4 py-2 rounded-xl text-xs">📎 ملف</button>
-                    <button onclick="postLesson()" class="flex-grow bg-blue-600 text-white py-2 rounded-xl text-xs font-bold">نشر في القناة</button>
+        <main class="flex-grow overflow-y-auto p-4 pb-24">
+            
+            <section id="admin-view" class="hidden space-y-4">
+                <div class="bg-white p-4 rounded-2xl shadow border-2 border-blue-900">
+                    <h3 class="font-bold text-sm mb-2">📢 توصيات المدير والمعاون</h3>
+                    <textarea id="adminPost" class="w-full p-2 border rounded-lg text-sm" placeholder="نشر ملاحظات لجميع الطلاب..."></textarea>
+                    <button onclick="publishAdmin()" class="w-full bg-blue-900 text-white py-2 rounded-lg mt-2 text-xs">نشر الآن</button>
                 </div>
+                <div id="student-list" class="bg-white p-4 rounded-2xl shadow">
+                    <h3 class="font-bold text-sm mb-2">📊 قائمة الطلاب المسجلين</h3>
+                    <div id="list-container" class="space-y-2 text-[10px]">
+                        </div>
+                </div>
+            </section>
+
+            <section id="teacher-view" class="hidden space-y-4">
+                <div class="bg-white p-4 rounded-2xl shadow border-2 border-green-600">
+                    <h3 class="font-bold text-sm mb-2">📂 قناة المادة: <span id="mySub"></span></h3>
+                    <textarea id="teachPost" class="w-full p-2 border rounded-lg text-sm" placeholder="نشر درس، صورة، أو ملف..."></textarea>
+                    <div class="flex gap-2 mt-2">
+                        <button class="bg-gray-100 p-2 rounded text-[10px]">📷 صورة</button>
+                        <button class="bg-gray-100 p-2 rounded text-[10px]">📎 ملف</button>
+                        <button onclick="publishTeacher()" class="flex-grow bg-green-600 text-white py-2 rounded-lg text-xs">نشر في القناة</button>
+                    </div>
+                </div>
+            </section>
+
+            <div id="channels-tab" class="tab-content active">
+                <h2 class="font-bold text-sm mb-4 text-blue-900">📢 القنوات والتبليغات</h2>
+                <div id="feed"></div>
             </div>
 
-            <div id="content-area" class="space-y-4">
-                <h2 class="text-xs font-bold text-gray-500 border-b pb-1">آخر التحديثات والتبليغات</h2>
-                <div id="feed"></div>
+            <div id="chat-tab" class="tab-content">
+                <h2 class="font-bold text-sm mb-4 text-blue-900">💬 دردشة شعبة <span id="chatTitle"></span></h2>
+                <div id="chat-box" class="h-64 overflow-y-auto bg-white p-3 rounded-xl mb-3 shadow-inner"></div>
+                <div class="flex gap-2">
+                    <input type="text" id="chatInp" class="flex-grow p-2 border rounded-xl text-sm" placeholder="اكتب رسالة...">
+                    <button onclick="sendMsg()" class="bg-blue-900 text-white px-4 rounded-xl">🚀</button>
+                </div>
             </div>
         </main>
 
-        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-3 shadow-2xl">
-            <button onclick="showSection('feed')" class="flex flex-col items-center"><span class="text-xl">📢</span><span class="text-[8px] font-bold">القنوات</span></button>
-            <button id="btn-chat" onclick="showSection('chat')" class="flex flex-col items-center"><span class="text-xl">💬</span><span class="text-[8px] font-bold">الدردشة</span></button>
-            <button id="btn-stats" onclick="showSection('stats')" class="hidden flex flex-col items-center"><span class="text-xl">📊</span><span class="text-[8px] font-bold">الطلاب</span></button>
-            <button id="btn-parents" onclick="showSection('parents')" class="hidden flex flex-col items-center"><span class="text-xl">🎓</span><span class="text-[8px] font-bold">الدرجات</span></button>
+        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-3 shadow-2xl z-50">
+            <button onclick="showTab('channels')" class="flex flex-col items-center"><span class="text-xl">📢</span><span class="text-[9px] font-bold">القنوات</span></button>
+            <button id="nav-chat" onclick="showTab('chat')" class="flex flex-col items-center"><span class="text-xl">💬</span><span class="text-[9px] font-bold">الدردشة</span></button>
+            <button id="nav-admin" onclick="showTab('admin')" class="hidden flex flex-col items-center"><span class="text-xl">📊</span><span class="text-[9px] font-bold">الإدارة</span></button>
         </nav>
     </div>
 
     <script>
-        let userData = {};
-        const CODES = { "مدير": "m123", "معاون": "a123", "مدرس": "t123" };
+        let me = {};
+        const PASSWORDS = { "مدير": "m123", "معاون": "a123", "مدرس": "t123" };
 
-        function loadPhoto(e) {
+        function handleImg(input) {
             const reader = new FileReader();
-            reader.onload = () => { document.getElementById('previewImg').src = reader.result; userData.photo = reader.result; };
-            reader.readAsDataURL(e.target.files[0]);
+            reader.onload = (e) => { 
+                document.getElementById('preview').src = e.target.result;
+                me.photo = e.target.result;
+            };
+            reader.readAsDataURL(input.files[0]);
         }
 
-        function updateUI() {
-            const role = document.getElementById('regRole').value;
-            document.getElementById('regCode').classList.toggle('hidden', role === 'طالب' || role === 'ولي امر');
-            document.getElementById('teacher-fields').classList.toggle('hidden', role !== 'مدرس');
+        function toggleRoleUI() {
+            const r = document.getElementById('uRole').value;
+            document.getElementById('uCode').classList.toggle('hidden', r === 'طالب' || r === 'ولي امر');
+            document.getElementById('teacher-spec').classList.toggle('hidden', r !== 'مدرس');
         }
 
-        function startApp() {
-            userData.name = document.getElementById('regName').value;
-            userData.role = document.getElementById('regRole').value;
-            userData.grade = document.getElementById('regGrade').value;
-            userData.section = document.getElementById('regSection').value;
-            const code = document.getElementById('regCode').value;
+        function doLogin() {
+            me.name = document.getElementById('uName').value;
+            me.role = document.getElementById('uRole').value;
+            me.grade = document.getElementById('uGrade').value;
+            me.section = document.getElementById('uSection').value;
+            me.subject = document.getElementById('uSubject').value;
+            const code = document.getElementById('uCode').value;
 
-            if(!userData.name || !userData.photo) return alert("يرجى إكمال الاسم والصورة");
-            if(CODES[userData.role] && code !== CODES[userData.role]) return alert("رمز الدخول خاطئ");
+            if(!me.name || !me.photo) return alert("يرجى إكمال الاسم الثلاثي وصورة الشخصية");
+            if(PASSWORDS[me.role] && code !== PASSWORDS[me.role]) return alert("الرمز السري خاطئ");
 
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
             
-            document.getElementById('navName').innerText = userData.name;
-            document.getElementById('navPhoto').src = userData.photo;
-            document.getElementById('navInfo').innerText = `${userData.role} | ${userData.grade} - ${userData.section}`;
+            document.getElementById('navName').innerText = me.name;
+            document.getElementById('navImg').src = me.photo;
+            document.getElementById('navMeta').innerText = `${me.role} | ${me.grade} - ${me.section}`;
+            document.getElementById('chatTitle').innerText = me.section;
 
-            if(userData.role === 'مدير' || userData.role === 'معاون') {
-                document.getElementById('admin-publish').classList.remove('hidden');
-                document.getElementById('btn-stats').classList.remove('hidden');
+            if(me.role === 'مدير' || me.role === 'معاون') {
+                document.getElementById('admin-view').classList.remove('hidden');
+                document.getElementById('nav-admin').classList.remove('hidden');
+                // إضافة اسم المدير للقائمة كمثال
+                addStudentToList(me.name, me.photo, me.role);
             }
-            if(userData.role === 'مدرس') {
-                document.getElementById('teacher-publish').classList.remove('hidden');
-                document.getElementById('subjectName').innerText = document.getElementById('regSubject').value;
-            }
-            if(userData.role === 'ولي امر') {
-                document.getElementById('btn-parents').classList.remove('hidden');
+            if(me.role === 'مدرس') {
+                document.getElementById('teacher-view').classList.remove('hidden');
+                document.getElementById('mySub').innerText = me.subject;
             }
         }
 
-        function postAdmin() {
-            const txt = document.getElementById('adminMsg').value;
-            if(!txt) return;
-            const card = document.createElement('div');
-            card.className = "app-card border-r-4 border-red-600";
-            card.innerHTML = `<b class="text-[10px] text-red-600">تبليغ من الإدارة (المدير/المعاون)</b><p class="text-sm mt-1">${txt}</p>`;
-            document.getElementById('feed').prepend(card);
-            document.getElementById('adminMsg').value = "";
+        function showTab(t) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            if(t === 'admin') document.getElementById('admin-view').classList.remove('hidden');
+            else document.getElementById(t + '-tab').classList.add('active');
         }
 
-        function postLesson() {
-            const txt = document.getElementById('lessonMsg').value;
-            const sub = document.getElementById('regSubject').value;
+        function publishAdmin() {
+            const txt = document.getElementById('adminPost').value;
             if(!txt) return;
-            const card = document.createElement('div');
-            card.className = "channel-style mb-4";
-            card.innerHTML = `<b class="text-[10px] text-blue-900">📚 مادة ${sub} | الأستاذ ${userData.name}</b><p class="text-sm mt-1">${txt}</p><span class="text-[8px] text-gray-500">موجه لطلاب شعبة ${userData.section}</span>`;
-            document.getElementById('feed').prepend(card);
-            document.getElementById('lessonMsg').value = "";
+            const post = `<div class="channel-post border-red-600"><b class="text-red-600 text-xs">📢 تبليغ من الإدارة</b><p class="text-sm mt-1">${txt}</p></div>`;
+            document.getElementById('feed').insertAdjacentHTML('afterbegin', post);
+            document.getElementById('adminPost').value = "";
+        }
+
+        function publishTeacher() {
+            const txt = document.getElementById('teachPost').value;
+            if(!txt) return;
+            const post = `<div class="channel-post"><b class="text-blue-900 text-xs">📚 قناة مادة ${me.subject}</b><p class="text-sm mt-1">${txt}</p><span class="text-[8px] text-gray-400 italic">بواسطة الأستاذ: ${me.name}</span></div>`;
+            document.getElementById('feed').insertAdjacentHTML('afterbegin', post);
+            document.getElementById('teachPost').value = "";
+        }
+
+        function addStudentToList(name, img, role) {
+            const item = `<div class="flex items-center gap-2 p-2 border-b"><img src="${img}" class="w-6 h-6 rounded-full"><span>${name} (${role})</span></div>`;
+            document.getElementById('list-container').innerHTML += item;
+        }
+
+        function sendMsg() {
+            const txt = document.getElementById('chatInp').value;
+            if(!txt) return;
+            const msg = `<div class="chat-msg"><b>أنت:</b><br>${txt}</div>`;
+            document.getElementById('chat-box').innerHTML += msg;
+            document.getElementById('chatInp').value = "";
         }
     </script>
 </body>
