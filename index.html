@@ -3,207 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منصة الإعدادية الشرقية - بإشراف محمد عدي مؤيد</title>
+    <title>منصة الإعدادية الشرقية - محمد عدي مؤيد</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
-        body { font-family: 'Tajawal', sans-serif; background-color: #f0f2f5; }
+        body { font-family: 'Tajawal', sans-serif; background: #f0f4f8; color: #1a202c; }
         .hidden { display: none !important; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        .channel-post { background: white; border-radius: 15px; padding: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-right: 6px solid #1e3a8a; margin-bottom: 15px; }
-        .chat-msg { background: #dcf8c6; padding: 10px; border-radius: 10px; margin-bottom: 5px; max-width: 80%; }
+        .app-card { background: white; border-radius: 20px; padding: 15px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); margin-bottom: 15px; }
+        .telegram-post { background: #ffffff; border-radius: 12px; padding: 12px; border-right: 4px solid #0088cc; box-shadow: 0 2px 4px rgba(0,0,0,0.05); position: relative; }
+        .chat-bubble { max-width: 85%; padding: 10px; border-radius: 15px; font-size: 13px; margin-bottom: 8px; }
+        .btn-primary { background: #1e3a8a; color: white; transition: 0.3s; }
+        .btn-primary:hover { background: #172554; }
     </style>
 </head>
 <body class="min-h-screen">
 
-    <div id="login-screen" class="max-w-md mx-auto my-10 p-6 bg-white rounded-3xl shadow-xl border-t-8 border-blue-900">
-        <h1 class="text-2xl font-bold text-center text-blue-900 mb-2">الإعدادية الشرقية</h1>
-        <p class="text-[10px] text-center font-bold text-gray-500 mb-6">المطور: محمد عدي مؤيد حمادي</p>
+    <div id="login-screen" class="max-w-lg mx-auto my-10 p-8 bg-white rounded-[2.5rem] shadow-2xl border-t-8 border-blue-900">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-bold text-blue-900">الإعدادية الشرقية</h1>
+            <p class="text-sm text-gray-500 font-bold mt-2">تصميم الطالب: محمد عدي مؤيد</p>
+        </div>
 
-        <div class="space-y-3">
-            <div class="text-center">
-                <img id="preview" src="https://via.placeholder.com/80" class="w-20 h-20 rounded-full mx-auto border-2 border-blue-900 object-cover">
-                <input type="file" id="uFile" class="hidden" onchange="handleImg(this)">
-                <button onclick="document.getElementById('uFile').click()" class="text-[10px] bg-blue-900 text-white px-4 py-1 rounded-full mt-2">رفع صورة الطالب/المدرس</button>
+        <div class="space-y-4">
+            <div class="flex flex-col items-center">
+                <img id="previewImg" src="https://via.placeholder.com/100" class="w-24 h-24 rounded-full border-4 border-blue-100 object-cover shadow-md">
+                <input type="file" id="userPhoto" class="hidden" onchange="previewFile(event)">
+                <button onclick="document.getElementById('userPhoto').click()" class="mt-2 text-xs text-blue-700 font-bold underline">إضافة صورتك الشخصية</button>
             </div>
 
-            <input type="text" id="uName" class="w-full p-3 border rounded-xl text-sm" placeholder="الاسم الثلاثي">
-            <input type="tel" id="uPhone" class="w-full p-3 border rounded-xl text-sm" placeholder="رقم الهاتف">
+            <input type="text" id="regName" class="w-full p-4 border rounded-2xl text-sm" placeholder="الاسم الثلاثي الكامل">
+            <input type="tel" id="regPhone" class="w-full p-4 border rounded-2xl text-sm" placeholder="رقم الهاتف">
             
-            <select id="uRole" class="w-full p-3 border rounded-xl font-bold text-sm bg-gray-50" onchange="toggleRoleUI()">
+            <select id="regRole" class="w-full p-4 border rounded-2xl font-bold text-sm bg-gray-50" onchange="toggleRoleFields()">
                 <option value="طالب">طالب</option>
-                <option value="مدرس">مدرس</option>
+                <option value="مدرس">مدرس مادة</option>
                 <option value="مدير">مدير المدرسة</option>
                 <option value="معاون">المعاون الإداري</option>
                 <option value="ولي امر">ولي أمر طالب</option>
             </select>
 
-            <input type="password" id="uCode" class="hidden w-full p-3 border border-red-300 rounded-xl text-sm" placeholder="الرمز السري الخاص">
+            <input type="password" id="regCode" class="hidden w-full p-4 border border-red-200 rounded-2xl text-sm" placeholder="الرمز السري الخاص">
 
-            <div id="edu-selection" class="grid grid-cols-2 gap-2">
-                <select id="uGrade" class="p-3 border rounded-xl text-sm font-bold bg-blue-50">
-                    <option>الرابع</option><option>الخامس</option><option>السادس</option>
+            <div id="student-group" class="grid grid-cols-2 gap-3">
+                <select id="regGrade" class="p-4 border rounded-2xl text-sm font-bold bg-blue-50">
+                    <option value="الرابع">الرابع</option><option value="الخامس">الخامس</option><option value="السادس">السادس</option>
                 </select>
-                <select id="uSection" class="p-3 border rounded-xl text-sm font-bold bg-blue-50">
-                    <option>أ</option><option>ب</option><option>ج</option><option>د</option><option>هـ</option>
-                    <option>و</option><option>ز</option><option>ح</option><option>ط</option><option>ي</option>
+                <select id="regSection" class="p-4 border rounded-2xl text-sm font-bold bg-blue-50">
+                    <option value="أ">شعبة أ</option><option value="ب">شعبة ب</option><option value="ج">شعبة ج</option><option value="د">شعبة د</option><option value="هـ">شعبة هـ</option><option value="و">شعبة و</option><option value="ز">شعبة ز</option><option value="ح">شعبة ح</option><option value="ط">شعبة ط</option><option value="ي">شعبة ي</option>
                 </select>
             </div>
 
-            <div id="teacher-spec" class="hidden border-t pt-2">
-                <p class="text-[10px] font-bold text-blue-800">المواد التي تدرسها:</p>
-                <input type="text" id="uSubject" class="w-full p-3 border rounded-xl text-sm mt-1" placeholder="مثال: الكيمياء والفيزياء">
+            <div id="teacher-group" class="hidden space-y-4 border-t pt-4">
+                <input type="text" id="regSubject" class="w-full p-4 border rounded-2xl text-sm" placeholder="اسم المادة التي تدرسها">
+                <p class="text-[10px] font-bold text-blue-900">اختر جميع الشعب التي تدرسها:</p>
+                <div class="grid grid-cols-5 gap-2" id="sections-checkboxes">
+                    </div>
             </div>
 
-            <button onclick="doLogin()" class="w-full bg-blue-900 text-white py-4 rounded-2xl font-bold shadow-lg">دخول للمنصة</button>
+            <button onclick="login()" class="w-full btn-primary py-5 rounded-2xl font-bold shadow-xl text-lg mt-6">دخول للمنصة</button>
         </div>
     </div>
 
     <div id="app" class="hidden flex flex-col h-screen">
         <header class="bg-blue-900 text-white p-4 flex justify-between items-center shadow-lg">
-            <div class="flex items-center gap-2">
-                <img id="navImg" class="w-10 h-10 rounded-full border border-white">
+            <div class="flex items-center gap-3">
+                <img id="navPhoto" class="w-12 h-12 rounded-full border-2 border-white object-cover">
                 <div>
-                    <h2 id="navName" class="text-xs font-bold"></h2>
-                    <p id="navMeta" class="text-[8px] text-blue-200"></p>
+                    <h2 id="navName" class="text-sm font-bold leading-tight"></h2>
+                    <p id="navMeta" class="text-[10px] text-blue-200 font-bold"></p>
                 </div>
             </div>
-            <button onclick="location.reload()" class="bg-red-600 px-3 py-1 rounded-full text-[10px]">خروج</button>
+            <button onclick="logout()" class="bg-red-500 text-white px-4 py-2 rounded-xl text-[10px] font-bold">تسجيل خروج</button>
         </header>
 
-        <main class="flex-grow overflow-y-auto p-4 pb-24">
-            
-            <section id="admin-view" class="hidden space-y-4">
-                <div class="bg-white p-4 rounded-2xl shadow border-2 border-blue-900">
-                    <h3 class="font-bold text-sm mb-2">📢 توصيات المدير والمعاون</h3>
-                    <textarea id="adminPost" class="w-full p-2 border rounded-lg text-sm" placeholder="نشر ملاحظات لجميع الطلاب..."></textarea>
-                    <button onclick="publishAdmin()" class="w-full bg-blue-900 text-white py-2 rounded-lg mt-2 text-xs">نشر الآن</button>
+        <main class="flex-grow overflow-y-auto p-4 pb-32">
+            <div id="teacher-panel" class="hidden app-card border-2 border-blue-400">
+                <h3 class="text-xs font-bold mb-3">القناة التعليمية للأستاذ: <span id="teacherSub"></span></h3>
+                <textarea id="teacherMsg" class="w-full p-3 border rounded-xl text-sm" placeholder="انشر درساً، صورة، أو ملف..."></textarea>
+                <div class="flex gap-2 mt-2">
+                    <button class="bg-gray-100 p-2 rounded-xl text-xs flex-1">📷 صورة</button>
+                    <button class="bg-gray-100 p-2 rounded-xl text-xs flex-1">📎 ملف</button>
+                    <button onclick="teacherPost()" class="bg-blue-600 text-white p-2 rounded-xl text-xs font-bold flex-[2]">نشر في القناة</button>
                 </div>
-                <div id="student-list" class="bg-white p-4 rounded-2xl shadow">
-                    <h3 class="font-bold text-sm mb-2">📊 قائمة الطلاب المسجلين</h3>
-                    <div id="list-container" class="space-y-2 text-[10px]">
-                        </div>
-                </div>
-            </section>
-
-            <section id="teacher-view" class="hidden space-y-4">
-                <div class="bg-white p-4 rounded-2xl shadow border-2 border-green-600">
-                    <h3 class="font-bold text-sm mb-2">📂 قناة المادة: <span id="mySub"></span></h3>
-                    <textarea id="teachPost" class="w-full p-2 border rounded-lg text-sm" placeholder="نشر درس، صورة، أو ملف..."></textarea>
-                    <div class="flex gap-2 mt-2">
-                        <button class="bg-gray-100 p-2 rounded text-[10px]">📷 صورة</button>
-                        <button class="bg-gray-100 p-2 rounded text-[10px]">📎 ملف</button>
-                        <button onclick="publishTeacher()" class="flex-grow bg-green-600 text-white py-2 rounded-lg text-xs">نشر في القناة</button>
-                    </div>
-                </div>
-            </section>
-
-            <div id="channels-tab" class="tab-content active">
-                <h2 class="font-bold text-sm mb-4 text-blue-900">📢 القنوات والتبليغات</h2>
-                <div id="feed"></div>
             </div>
 
-            <div id="chat-tab" class="tab-content">
-                <h2 class="font-bold text-sm mb-4 text-blue-900">💬 دردشة شعبة <span id="chatTitle"></span></h2>
-                <div id="chat-box" class="h-64 overflow-y-auto bg-white p-3 rounded-xl mb-3 shadow-inner"></div>
-                <div class="flex gap-2">
-                    <input type="text" id="chatInp" class="flex-grow p-2 border rounded-xl text-sm" placeholder="اكتب رسالة...">
-                    <button onclick="sendMsg()" class="bg-blue-900 text-white px-4 rounded-xl">🚀</button>
-                </div>
+            <div id="admin-panel" class="hidden app-card border-2 border-red-500">
+                <h3 class="text-xs font-bold mb-2">توصيات وتعليمات الإدارة</h3>
+                <textarea id="adminMsg" class="w-full p-3 border rounded-xl text-sm" placeholder="رسالة لجميع الطلاب والمدرسين..."></textarea>
+                <button onclick="adminPost()" class="w-full bg-red-600 text-white py-2 rounded-xl mt-2 text-xs font-bold">نشر الآن</button>
+            </div>
+
+            <div id="main-feed" class="space-y-4">
+                <h2 class="text-xs font-bold text-gray-500 mb-2">المنشورات والقنوات:</h2>
+                <div id="feed-container" class="space-y-4"></div>
+            </div>
+
+            <div id="stats-panel" class="hidden space-y-4">
+                <h2 class="text-sm font-bold text-blue-900 border-b pb-2">سجل الطلاب حسب الشعب:</h2>
+                <div id="students-list" class="space-y-2"></div>
             </div>
         </main>
 
         <nav class="fixed bottom-0 left-0 right-0 bg-white border-t flex justify-around p-3 shadow-2xl z-50">
-            <button onclick="showTab('channels')" class="flex flex-col items-center"><span class="text-xl">📢</span><span class="text-[9px] font-bold">القنوات</span></button>
-            <button id="nav-chat" onclick="showTab('chat')" class="flex flex-col items-center"><span class="text-xl">💬</span><span class="text-[9px] font-bold">الدردشة</span></button>
-            <button id="nav-admin" onclick="showTab('admin')" class="hidden flex flex-col items-center"><span class="text-xl">📊</span><span class="text-[9px] font-bold">الإدارة</span></button>
+            <button onclick="showTab('home')" class="flex flex-col items-center"><span class="text-2xl">📢</span><span class="text-[9px] font-bold">القنوات</span></button>
+            <button id="nav-chat" onclick="showTab('chat')" class="flex flex-col items-center"><span class="text-2xl">💬</span><span class="text-[9px] font-bold">الدردشة</span></button>
+            <button id="nav-admin-only" onclick="showTab('stats')" class="hidden flex flex-col items-center"><span class="text-2xl">📊</span><span class="text-[9px] font-bold">الطلاب</span></button>
         </nav>
     </div>
 
     <script>
-        let me = {};
-        const PASSWORDS = { "مدير": "m123", "معاون": "a123", "مدرس": "t123" };
+        let me = null;
+        const CODES = { "مدير": "9900", "معاون": "8800", "مدرس": "7700" };
+        const sections = ["أ", "ب", "ج", "د", "هـ", "و", "ز", "ح", "ط", "ي"];
 
-        function handleImg(input) {
+        // ملء مربعات اختيار الشعب للمدرس
+        const sectionContainer = document.getElementById('sections-checkboxes');
+        sections.forEach(s => {
+            sectionContainer.innerHTML += `<label class="text-[10px] font-bold flex items-center gap-1"><input type="checkbox" name="teachSec" value="${s}"> ${s}</label>`;
+        });
+
+        window.onload = () => {
+            const saved = localStorage.getItem('shrqia_user');
+            if (saved) { me = JSON.parse(saved); renderApp(); }
+        };
+
+        function previewFile(e) {
             const reader = new FileReader();
-            reader.onload = (e) => { 
-                document.getElementById('preview').src = e.target.result;
-                me.photo = e.target.result;
+            reader.onload = () => document.getElementById('previewImg').src = reader.result;
+            reader.readAsDataURL(e.target.files[0]);
+        }
+
+        function toggleRoleFields() {
+            const r = document.getElementById('regRole').value;
+            document.getElementById('regCode').classList.toggle('hidden', r === 'طالب' || r === 'ولي امر');
+            document.getElementById('teacher-group').classList.toggle('hidden', r !== 'مدرس');
+        }
+
+        function login() {
+            const name = document.getElementById('regName').value;
+            const role = document.getElementById('regRole').value;
+            const code = document.getElementById('regCode').value;
+            const photo = document.getElementById('previewImg').src;
+
+            if (!name || photo.includes('placeholder')) return alert("يرجى إكمال الاسم والصورة");
+            if (CODES[role] && code !== CODES[role]) return alert("الرمز السري خاطئ");
+
+            let teacherSections = [];
+            if(role === 'مدرس') {
+                document.querySelectorAll('input[name="teachSec"]:checked').forEach(el => teacherSections.push(el.value));
+            }
+
+            me = {
+                name, role, photo,
+                grade: document.getElementById('regGrade').value,
+                section: document.getElementById('regSection').value,
+                subject: document.getElementById('regSubject').value,
+                tSections: teacherSections
             };
-            reader.readAsDataURL(input.files[0]);
+
+            localStorage.setItem('shrqia_user', JSON.stringify(me));
+            renderApp();
         }
 
-        function toggleRoleUI() {
-            const r = document.getElementById('uRole').value;
-            document.getElementById('uCode').classList.toggle('hidden', r === 'طالب' || r === 'ولي امر');
-            document.getElementById('teacher-spec').classList.toggle('hidden', r !== 'مدرس');
-        }
+        function logout() { localStorage.removeItem('shrqia_user'); location.reload(); }
 
-        function doLogin() {
-            me.name = document.getElementById('uName').value;
-            me.role = document.getElementById('uRole').value;
-            me.grade = document.getElementById('uGrade').value;
-            me.section = document.getElementById('uSection').value;
-            me.subject = document.getElementById('uSubject').value;
-            const code = document.getElementById('uCode').value;
-
-            if(!me.name || !me.photo) return alert("يرجى إكمال الاسم الثلاثي وصورة الشخصية");
-            if(PASSWORDS[me.role] && code !== PASSWORDS[me.role]) return alert("الرمز السري خاطئ");
-
+        function renderApp() {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('app').classList.remove('hidden');
-            
+            document.getElementById('navPhoto').src = me.photo;
             document.getElementById('navName').innerText = me.name;
-            document.getElementById('navImg').src = me.photo;
             document.getElementById('navMeta').innerText = `${me.role} | ${me.grade} - ${me.section}`;
-            document.getElementById('chatTitle').innerText = me.section;
 
-            if(me.role === 'مدير' || me.role === 'معاون') {
-                document.getElementById('admin-view').classList.remove('hidden');
-                document.getElementById('nav-admin').classList.remove('hidden');
-                // إضافة اسم المدير للقائمة كمثال
-                addStudentToList(me.name, me.photo, me.role);
-            }
-            if(me.role === 'مدرس') {
-                document.getElementById('teacher-view').classList.remove('hidden');
-                document.getElementById('mySub').innerText = me.subject;
+            if (me.role === 'مدرس') {
+                document.getElementById('teacher-panel').classList.remove('hidden');
+                document.getElementById('teacherSub').innerText = me.subject;
+            } else if (me.role === 'مدير' || me.role === 'معاون') {
+                document.getElementById('admin-panel').classList.remove('hidden');
+                document.getElementById('nav-admin-only').classList.remove('hidden');
             }
         }
 
-        function showTab(t) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            if(t === 'admin') document.getElementById('admin-view').classList.remove('hidden');
-            else document.getElementById(t + '-tab').classList.add('active');
+        function showTab(tab) {
+            const feed = document.getElementById('main-feed');
+            const stats = document.getElementById('stats-panel');
+            if (tab === 'home') { feed.classList.remove('hidden'); stats.classList.add('hidden'); }
+            else if (tab === 'stats') { feed.classList.add('hidden'); stats.classList.remove('hidden'); loadStudents(); }
         }
 
-        function publishAdmin() {
-            const txt = document.getElementById('adminPost').value;
+        function adminPost() {
+            const txt = document.getElementById('adminMsg').value;
             if(!txt) return;
-            const post = `<div class="channel-post border-red-600"><b class="text-red-600 text-xs">📢 تبليغ من الإدارة</b><p class="text-sm mt-1">${txt}</p></div>`;
-            document.getElementById('feed').insertAdjacentHTML('afterbegin', post);
-            document.getElementById('adminPost').value = "";
+            const post = `<div class="telegram-post border-red-500"><b class="text-red-600 text-[11px]">🔴 توصية الإدارة (${me.role})</b><p class="text-sm mt-1">${txt}</p><span class="text-[8px] text-gray-400 block text-left">الآن</span></div>`;
+            document.getElementById('feed-container').insertAdjacentHTML('afterbegin', post);
+            document.getElementById('adminMsg').value = "";
         }
 
-        function publishTeacher() {
-            const txt = document.getElementById('teachPost').value;
+        function teacherPost() {
+            const txt = document.getElementById('teacherMsg').value;
             if(!txt) return;
-            const post = `<div class="channel-post"><b class="text-blue-900 text-xs">📚 قناة مادة ${me.subject}</b><p class="text-sm mt-1">${txt}</p><span class="text-[8px] text-gray-400 italic">بواسطة الأستاذ: ${me.name}</span></div>`;
-            document.getElementById('feed').insertAdjacentHTML('afterbegin', post);
-            document.getElementById('teachPost').value = "";
+            const post = `<div class="telegram-post"><b class="text-blue-600 text-[11px]">📚 قناة ${me.subject} | الأستاذ ${me.name}</b><p class="text-sm mt-1">${txt}</p><span class="text-[8px] text-gray-400 block text-left">موجه لشعب: ${me.tSections.join(', ')}</span></div>`;
+            document.getElementById('feed-container').insertAdjacentHTML('afterbegin', post);
+            document.getElementById('teacherMsg').value = "";
         }
 
-        function addStudentToList(name, img, role) {
-            const item = `<div class="flex items-center gap-2 p-2 border-b"><img src="${img}" class="w-6 h-6 rounded-full"><span>${name} (${role})</span></div>`;
-            document.getElementById('list-container').innerHTML += item;
-        }
-
-        function sendMsg() {
-            const txt = document.getElementById('chatInp').value;
-            if(!txt) return;
-            const msg = `<div class="chat-msg"><b>أنت:</b><br>${txt}</div>`;
-            document.getElementById('chat-box').innerHTML += msg;
-            document.getElementById('chatInp').value = "";
+        function loadStudents() {
+            const list = document.getElementById('students-list');
+            list.innerHTML = `<div class="flex items-center gap-3 bg-white p-3 rounded-xl shadow-sm">
+                <img src="${me.photo}" class="w-10 h-10 rounded-full border">
+                <div><p class="text-xs font-bold">${me.name}</p><p class="text-[9px] text-gray-500">${me.role} - شعبة ${me.section}</p></div>
+            </div>`;
         }
     </script>
 </body>
